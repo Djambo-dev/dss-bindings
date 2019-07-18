@@ -5,9 +5,11 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
+import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
 
 import java.util.List;
@@ -23,12 +25,21 @@ public class StoreServiceImpl implements StoreService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(StoreInfoDto storeInfo) {
 
         if (!CollectionUtils.isEmpty(storeInfo.getStores())) {
             List<StoreEntity> storeEntities = storeInfo.getStores().stream()
                     .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                     .collect(Collectors.toList());
+
+            List<Long> mdmStoreIds = storeEntities.stream()
+                    .map(StoreEntity::getMdmStoreId)
+                    .collect(Collectors.toList());
+
+            logger.info("Deleting existing store records");
+
+            storeRepository.deleteAllByMdmStoreIdIn(mdmStoreIds);
 
             logger.info("Saving stores {} to DB", storeEntities);
 
@@ -37,16 +48,15 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<Long> getStoreIdsByPersonalNumber(Long personalNumber) {
-        List<Long> storeIds = storeRepository.findStoreIdsByPersonalNumber(personalNumber);
+    public List<StoreDto> getStoreIdsByPersonalNumber(Long personalNumber) {
+        List<StoreEntity> stores = storeRepository.findAllByPersonalNumber(personalNumber);
 
-        if (!CollectionUtils.isEmpty(storeIds)) {
-            String ids = storeIds.stream()
-                    .map(id -> id.toString())
-                    .collect(Collectors.joining(", "));
-            logger.info("Store ids for document service: [{}]", ids);
-        }
+        List<StoreDto> storeDtos = stores.stream()
+                .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
+                .collect(Collectors.toList());
 
-        return storeIds;
+        logger.info("Stores for document service: {}", storeDtos);
+
+        return storeDtos;
     }
 }
