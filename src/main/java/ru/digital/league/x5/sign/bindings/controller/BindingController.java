@@ -25,7 +25,7 @@ public class BindingController {
     @GetMapping(value = "/stores/{personalNumber}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public List<StoreDto> getStoreIdsByPersonalNumber(@PathVariable("personalNumber") Long personalNumber) {
         logger.info("Searching for stores for employee with personal number {}", personalNumber);
-        return storeService.getStoreIdsByPersonalNumber(personalNumber);
+        return storeService.getStoresByPersonalNumber(personalNumber);
     }
 
 }

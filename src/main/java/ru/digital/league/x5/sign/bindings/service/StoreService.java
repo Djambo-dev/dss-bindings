@@ -8,5 +8,5 @@ import java.util.List;
 public interface StoreService {
     void save(StoreInfoDto storeInfo);
 
-    List<StoreDto> getStoreIdsByPersonalNumber(Long personalNumber);
+    List<StoreDto> getStoresByPersonalNumber(Long personalNumber);
 }

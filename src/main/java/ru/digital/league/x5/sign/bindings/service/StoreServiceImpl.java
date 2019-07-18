@@ -48,7 +48,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreDto> getStoreIdsByPersonalNumber(Long personalNumber) {
+    public List<StoreDto> getStoresByPersonalNumber(Long personalNumber) {
         List<StoreEntity> stores = storeRepository.findAllByPersonalNumber(personalNumber);
 
         List<StoreDto> storeDtos = stores.stream()
