@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_URL}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+  autoconfigure:
+    exclude: "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
+  datasource:
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    url: "jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DATABASE}"
+  liquibase:
+    change-log: "classpath:db/changelog/db-master-changelog.xml"
+    user: ${PG_USER}
+    password: ${PG_PASSWORD}
+    url: "jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DATABASE}"
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+
+kafka:
+  topic:
+    inbox_stores: ${KAFKA_INBOX_STORES_TOPIC}
+    inbox_bindings: ${KAFKA_INBOX_BINDINGS_TOPIC}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ['health', 'info']
