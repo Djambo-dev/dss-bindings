@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.digital.league.x5.sign.bindings.config.ModelMapperConfig;
 import ru.digital.league.x5.sign.bindings.data.TestData;
 import ru.digital.league.x5.sign.bindings.db.repository.EmployeeBindingRepository;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingInfoDto;
@@ -15,7 +16,7 @@ import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingInfoDto;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ModelMapper.class})
+@SpringBootTest(classes = {ModelMapperConfig.class})
 public class EmployeeBindingServiceImplTest {
 
     @Mock
