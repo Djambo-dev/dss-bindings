@@ -11,7 +11,7 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     @Query("SELECT se FROM StoreEntity se " +
             "LEFT JOIN EmployeeBindingEntity ebe ON se.cfoId = ebe.cfoId " +
-            "WHERE ebe.personalNumber = :personalNumber")
+            "WHERE ebe.personalNumber = :personalNumber AND se.closeDate IS NULL")
     List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") Long personalNumber);
 
     void deleteAllByMdmStoreIdIn(List<Long> mdmIds);
