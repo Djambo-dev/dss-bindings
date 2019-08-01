@@ -1,0 +1,166 @@
+#ПЕРЕМЕННЫЕ: NAME HOSTNAME DOMAIN IMAGE NAMESPACE CONFIG_NAME
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  app: ${NAME}
+  template: ${NAME}
+metadata:
+  annotations:
+    description: example ${NAME} from Gitlab CI
+    iconClass: icon-gitlab
+    openshift.io/display-name: ${NAME}
+    openshift.io/long-description: ${NAME}
+    openshift.io/provider-display-name:
+    openshift.io/support-url:
+    tags: gitlab, openjdk
+    template.openshift.io/bindable: "false"
+  name: ${NAME}
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes and load balances the application pods
+    name: ${NAME}
+  spec:
+    ports:
+    - name: app
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: ${NAME}
+#- apiVersion: v1
+#  kind: Route
+#  metadata:
+#    name: ${NAME}
+#  spec:
+#    host: ${APPLICATION_DOMAIN}
+#    to:
+#      kind: Service
+#      name: ${NAME}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: Keeps track of changes in the application image
+    labels:
+      app: ${NAME}
+      template: ${NAME}
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: ${IMAGE}
+      generation: 6
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the application server
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${NAME}
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          name: ${NAME}
+        name: ${NAME}
+      spec:
+        containers:
+          - envFrom:
+              - configMapRef:
+                  name: "${CONFIG_NAME}"
+              - secretRef:
+                  name: "${SECRET_NAME}"
+            image: ${IMAGE}
+            imagePullPolicy: Always
+            livenessProbe:
+              httpGet:
+                path: /actuator/health
+                port: 8080
+              initialDelaySeconds: 30
+              timeoutSeconds: 15
+            name: ${NAME}
+            ports:
+              - containerPort: 8080
+                protocol: TCP
+            readinessProbe:
+              httpGet:
+                path: /actuator/health
+                port: 8080
+              initialDelaySeconds: 30
+              timeoutSeconds: 15
+            resources:
+              limits:
+                memory: ${MEMORY_LIMIT}
+                cpu: ${CPU_LIMIT}
+              requests:
+                cpu: "50m"
+                memory: "200Mi"
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}:latest
+      type: ImageChange
+    - type: ConfigChange
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: demo-service
+- description: The OpenShift Namespace where the ImageStream resides.
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+  value: openshift
+- description: Maximum amount of memory the container can use.
+  displayName: Memory Limit
+  name: MEMORY_LIMIT
+  required: true
+  value: 2048Mi
+- description: Maximum amount of CPU the container can use.
+  displayName: CPU Limit
+  name: CPU_LIMIT
+  required: true
+  value: 1000m
+- description: Set this to the relative path to your project if it is not in the root
+    of your repository.
+  displayName: Context Directory
+  name: CONTEXT_DIR
+- description: The exposed hostname that will route to the httpd service, if left
+    blank a value will be defaulted.
+  displayName: Application Hostname
+  name: APPLICATION_DOMAIN
+- description: Default image path in docker-registry
+  displayName: Docker-registry
+  required: true
+  name: IMAGE
+  value: test
+- description: ConfigMap with parameters
+  displayName: ConfigMap name
+  required: true
+  name: CONFIG_NAME
+  value: ${NAME}-config
+- description: Secret with credentials
+  displayName: Secret name
+  required: true
+  name: SECRET_NAME
+  value: ${NAME}-secret
