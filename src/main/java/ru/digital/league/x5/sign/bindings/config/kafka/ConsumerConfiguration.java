@@ -27,9 +27,18 @@ public class ConsumerConfiguration {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
-
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
+    @Value("${kafka.ssl.enable}")
+    private Boolean sslEnable;
+    @Value("${kafka.ssl.key-store-path}")
+    private String keyStorePath;
+    @Value("${kafka.ssl.key-store-password}")
+    private String keyStorePassword;
+    @Value("${kafka.ssl.trust-store-path}")
+    private String trustStorePath;
+    @Value("${kafka.ssl.trust-store-password}")
+    private String trustStorePassword;
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, StoreInfoDto> storeKafkaListenerContainerFactory() {
@@ -75,6 +84,13 @@ public class ConsumerConfiguration {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        if (sslEnable) {
+            props.put("security.protocol", "SSL");
+            props.put("ssl.keystore.location", keyStorePath );
+            props.put("ssl.keystore.password", keyStorePassword);
+            props.put("ssl.truststore.location", trustStorePath);
+            props.put("ssl.truststore.password", trustStorePassword);
+        }
         return props;
     }
 }

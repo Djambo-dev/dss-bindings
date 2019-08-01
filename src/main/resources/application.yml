@@ -27,6 +27,12 @@ kafka:
   topic:
     inbox_stores: ${KAFKA_INBOX_STORES_TOPIC}
     inbox_bindings: ${KAFKA_INBOX_BINDINGS_TOPIC}
+  ssl:
+    enable: ${KAFKA_SSL_ENABLE:false}
+    key-store-path: ${KAFKA_KEY_STORE_PATH}
+    key-store-password: ${KAFKA_KEY_STORE_PASSWORD}
+    trust-store-path: ${KAFKA_TRUST_STORE_PATH}
+    trust-store-password: ${KAFKA_TRUST_STORE_PASSWORD}
 
 management:
   endpoints:
