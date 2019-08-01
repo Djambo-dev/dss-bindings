@@ -1,20 +1,18 @@
-# Зарегать переменные NEXUS_REGISTRY NEXUS_LOGIN NEXUS_PASSWORD NEXUS_PATH
+# Зарегать переменные NEXUS_REGISTRY NEXUS_LOGIN NEXUS_PASSWORD NEXUS_PATH SECRET_NAME  NAMESPACE STAND
 
 image: docker:stable
 services:
   - name: docker:dind
-    command: ["--insecure-registry=registry.x5.phoenixit.ru"]
+    command:
+      - "--insecure-registry=registry.x5.phoenixit.ru"
 
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
-  NEXUS_REGISTRY: registry.x5.phoenixit.ru
-  NEXUS_PATH: x5
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
   IMAGE: "${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}"
-  DOMAIN: x5.phoenixit.ru
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
-  SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
 stages:
   - build
@@ -22,8 +20,6 @@ stages:
   - deploy
 
 before_script:
-#  - echo `pwd` # debug
-#  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 build:
@@ -35,8 +31,6 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 day
-  only:
-    - master
 
 package:
   stage: containerize
@@ -49,15 +43,13 @@ package:
     - docker push ${IMAGE}:latest
     - docker rmi ${IMAGE}:${CI_COMMIT_SHORT_SHA}
     - docker rmi ${IMAGE}:latest
+  when: manual
   only:
     - master
-  when: manual
 
 deploy_test:
   stage: deploy
   variables:
-    NAMESPACE: x5-sign
-    STAND: test
   image: openshift/origin-cli
   script:
     - oc login ${OKD_URL} --token=${OKD_TOKEN} --insecure-skip-tls-verify
