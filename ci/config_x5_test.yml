@@ -19,8 +19,8 @@ data:
   KAFKA_DOCUMENT_EVENTS_TOPIC: "topic-document-event"
   KAFKA_SIGN_RESULT_TOPIC: "topic-sign-result"
   KAFKA_SSL_ENABLE: "true"
-  KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.client.keystore.jks"
-  KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.client.truststore.jks"
+  KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
+  KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
 # in secret  KAFKA_KEY_STORE_PASSWORD:
 # in secret KAFKA_TRUST_STORE_PASSWORD:
   JAVA_TOOL_OPTIONS: >
