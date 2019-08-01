@@ -110,6 +110,14 @@ objects:
               requests:
                 cpu: "50m"
                 memory: "200Mi"
+            volumeMounts:
+              - mountPath: ${SECRET_MOUNT_POINT}
+                name: volume-secret
+                readOnly: true
+        volumes:
+          - name: volume-secret
+            secret:
+              secretName: ${SECRET_VOLUME}
     triggers:
     - imageChangeParams:
         automatic: true
@@ -163,4 +171,14 @@ parameters:
   displayName: Secret name
   required: true
   name: SECRET_NAME
-  value: ${NAME}-secret
+  value: dss-common-secret
+- description: Secret volume
+  displayName: Secret volume
+  required: true
+  name: SECRET_VOLUME
+  value: secret-volume
+- description: Secret volume Mount point
+  displayName: Secret volume Mount point
+  required: true
+  name: SECRET_MOUNT_POINT
+  value: /kafka_cert
