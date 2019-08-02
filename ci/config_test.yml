@@ -4,20 +4,15 @@ metadata:
   creationTimestamp: null
   name: dss-bindings-config
 data:
-  MONGODB_AUTH_DB: "signdocs"
-  MONGODB_HOST: "services.x5.phoenixit.ru"
-  MONGODB_PORT: "27017"
-  MONGODB_DB_NAME: "signdocs"
-# in secret MONGODB_USER:
-# in secret MONGODB_PASSWORD:
-  GRIDFS_DB_NAME: "signdocs"
+  PG_USER:
+  PG_PASSWORD:
+  PG_HOST:
+  PG_PORT:
+  PG_DATABASE:
   KAFKA_URL: "services.x5.phoenixit.ru:9093"
-  KAFKA_CONSUMER_GROUP_ID: "documents-group"
-  KAFKA_INBOX_DOCS_TOPIC: "topic-inbox-documents"
-  KAFKA_SAVE_SIGNED_TOPIC: "topic-save-signed"
-  KAFKA_OUTBOX_STATUS_TOPIC: "topic-outbox-status"
-  KAFKA_DOCUMENT_EVENTS_TOPIC: "topic-document-event"
-  KAFKA_SIGN_RESULT_TOPIC: "topic-sign-result"
+  KAFKA_CONSUMER_GROUP_ID: "bindings-group"
+  KAFKA_INBOX_BINDINGS_TOPIC: "topic-bindings"
+  KAFKA_INBOX_STORES_TOPIC: "topic-stores"
   KAFKA_SSL_ENABLE: "true"
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.client.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.client.truststore.jks"
