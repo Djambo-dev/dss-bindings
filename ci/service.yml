@@ -39,28 +39,6 @@ objects:
 #      kind: Service
 #      name: ${NAME}
 - apiVersion: v1
-  kind: ImageStream
-  metadata:
-    annotations:
-      description: Keeps track of changes in the application image
-    labels:
-      app: ${NAME}
-      template: ${NAME}
-    name: ${NAME}
-  spec:
-    lookupPolicy:
-      local: false
-    tags:
-    - annotations: null
-      from:
-        kind: DockerImage
-        name: ${IMAGE}
-      generation: 6
-      importPolicy: {}
-      name: latest
-      referencePolicy:
-        type: Source
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
@@ -108,7 +86,7 @@ objects:
                 memory: ${MEMORY_LIMIT}
                 cpu: ${CPU_LIMIT}
               requests:
-                cpu: "50m"
+                cpu: "100m"
                 memory: "200Mi"
             volumeMounts:
               - mountPath: ${SECRET_MOUNT_POINT}
@@ -118,15 +96,9 @@ objects:
           - name: volume-secret
             secret:
               secretName: ${SECRET_VOLUME}
+        imagePullSecrets:
+          - name: docker-registry-secret
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - ${NAME}
-        from:
-          kind: ImageStreamTag
-          name: ${NAME}:latest
-      type: ImageChange
     - type: ConfigChange
 parameters:
 - description: The name assigned to all of the frontend objects defined in this template.
