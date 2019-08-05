@@ -9,7 +9,7 @@ services:
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
+#  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   IMAGE: "${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
@@ -20,17 +20,20 @@ stages:
   - deploy
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export GRADLE_USER_HOME=/home/gradle/project
 
 build:
-  image: openjdk:11
+  image: gradle:jdk11
   stage: build
   script:
-    - ./gradlew build
+#    - ./gradlew build
+     - gradle clean build
   artifacts:
     paths:
       - build/libs/*.jar
     expire_in: 1 day
+  only:
+    - master
 
 package:
   stage: containerize
