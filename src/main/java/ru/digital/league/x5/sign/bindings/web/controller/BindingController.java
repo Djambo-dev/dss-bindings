@@ -1,4 +1,4 @@
-package ru.digital.league.x5.sign.bindings.controller;
+package ru.digital.league.x5.sign.bindings.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
