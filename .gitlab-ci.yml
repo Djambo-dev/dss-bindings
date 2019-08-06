@@ -1,4 +1,4 @@
-# Зарегать переменные NEXUS_REGISTRY NEXUS_LOGIN NEXUS_PASSWORD NEXUS_PATH SECRET_NAME  NAMESPACE STAND
+# Зарегать переменные NEXUS_REGISTRY NEXUS_LOGIN NEXUS_PASSWORD NEXUS_PATH SECRET_NAME  NAMESPACE STAND BASE_IMAGE
 
 image: docker:stable
 services:
@@ -40,11 +40,14 @@ package:
   before_script:
     - docker login -u $NEXUS_LOGIN -p $NEXUS_PASSWORD $NEXUS_REGISTRY
   script:
-    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHORT_SHA} .
-    - docker tag ${IMAGE}:${CI_COMMIT_SHORT_SHA} ${IMAGE}:latest
-    - docker push ${IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
+    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
+    - cp Dockerfile_tmp Dockerfile
+    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
+    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker push ${IMAGE}:latest
-    - docker rmi ${IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE}:latest
   when: manual
   only:
@@ -60,8 +63,8 @@ deploy_test:
 #    - oc create configmap ${CI_PROJECT_NAME}-config --from-file=env/config_${STAND}.yml --dry-run -o yaml | oc apply -n ${NAMESPACE} -f -
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/config_${STAND}.yml -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHORT_SHA}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME} | oc apply -n ${NAMESPACE} -f -
-#    - oc tag ${IMAGE}:${CI_COMMIT_SHORT_SHA} ${CI_PROJECT_NAME}:latest
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME} | oc apply -n ${NAMESPACE} -f -
+#    - oc tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${CI_PROJECT_NAME}:latest
   when: manual
   only:
     - master
