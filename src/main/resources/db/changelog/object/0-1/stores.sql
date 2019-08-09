@@ -28,3 +28,7 @@ COMMENT ON COLUMN bindings.stores.cfo_id IS 'Код ЦФО (Центра Фин�
 COMMENT ON COLUMN bindings.stores.address IS 'Адрес магазина';
 COMMENT ON COLUMN bindings.stores.open_date IS 'Дата открытия магазина';
 COMMENT ON COLUMN bindings.stores.close_date IS 'Дата закрытия магазина';
+
+--changeSet vsaydumarov:stores-2
+ALTER TABLE bindings.stores
+    ALTER COLUMN mdm_store_id TYPE VARCHAR(50) USING mdm_store_id::VARCHAR(50);

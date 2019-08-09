@@ -29,7 +29,7 @@ public class TestData {
 
     public static StoreDto storeDto1() {
         return StoreDto.builder()
-                .mdmStoreId(3402L)
+                .mdmStoreId("3402")
                 .name("4467-Пятерочка.")
                 .cfoId("E1007345")
                 .address("184510, Мурманская обл, Мончегорск г, Бредова ул, 30")
@@ -40,7 +40,7 @@ public class TestData {
 
     public static StoreDto storeDto2() {
         return StoreDto.builder()
-                .mdmStoreId(1111L)
+                .mdmStoreId("1111")
                 .name("1111-Пятерочка.")
                 .cfoId("E11111111")
                 .address("111111, Москва г, Никольская ул, 1")

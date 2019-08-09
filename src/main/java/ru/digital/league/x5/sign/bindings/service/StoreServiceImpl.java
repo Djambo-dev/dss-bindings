@@ -33,7 +33,7 @@ public class StoreServiceImpl implements StoreService {
                     .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                     .collect(Collectors.toList());
 
-            List<Long> mdmStoreIds = storeEntities.stream()
+            List<String> mdmStoreIds = storeEntities.stream()
                     .map(StoreEntity::getMdmStoreId)
                     .collect(Collectors.toList());
 

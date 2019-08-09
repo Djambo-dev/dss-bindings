@@ -21,7 +21,7 @@ public class StoreEntity extends BusinessEntity {
     private Long storeId;
 
     @Column(name = "mdm_store_id")
-    private Long mdmStoreId;
+    private String mdmStoreId;
 
     @Column(name = "name")
     private String name;

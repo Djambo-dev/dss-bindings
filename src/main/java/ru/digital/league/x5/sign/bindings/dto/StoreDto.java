@@ -19,7 +19,7 @@ public class StoreDto {
     /**
      * Код завода SAP
      */
-    private Long mdmStoreId;
+    private String mdmStoreId;
 
     /**
      * Название магазина для отображения
