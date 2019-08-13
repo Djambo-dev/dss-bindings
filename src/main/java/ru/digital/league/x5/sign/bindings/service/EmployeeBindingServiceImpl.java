@@ -32,10 +32,15 @@ public class EmployeeBindingServiceImpl implements EmployeeBindingService {
                     .map(bindingDto -> modelMapper.map(bindingDto, EmployeeBindingEntity.class))
                     .collect(Collectors.toList());
 
+            List<String> updatedCfoIds = employeeBindingEntities.stream()
+                    .map(EmployeeBindingEntity::getCfoId)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+
             logger.info("Deleting existing employee binding records");
 
-            employeeBindingEntities.forEach(binding ->
-                    employeeBindingRepository.deleteAllByCfoIdAndPersonalNumber(binding.getCfoId(), binding.getPersonalNumber()));
+            employeeBindingRepository.deleteAllByCfoIdIn(updatedCfoIds);
 
             logger.info("Saving employee bindings {} to DB", employeeBindingEntities);
 

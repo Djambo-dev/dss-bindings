@@ -33,13 +33,14 @@ public class StoreServiceImpl implements StoreService {
                     .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                     .collect(Collectors.toList());
 
-            List<String> mdmStoreIds = storeEntities.stream()
-                    .map(StoreEntity::getMdmStoreId)
+            List<String> cfoIds = storeEntities.stream()
+                    .map(StoreEntity::getCfoId)
+                    .distinct()
                     .collect(Collectors.toList());
 
             logger.info("Deleting existing store records");
 
-            storeRepository.deleteAllByMdmStoreIdIn(mdmStoreIds);
+            storeRepository.deleteAllByCfoIdIn(cfoIds);
 
             logger.info("Saving stores {} to DB", storeEntities);
 
