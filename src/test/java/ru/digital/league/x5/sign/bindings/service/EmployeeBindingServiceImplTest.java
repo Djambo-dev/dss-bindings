@@ -42,7 +42,7 @@ public class EmployeeBindingServiceImplTest {
     public void save() {
         employeeBindingService.save(employeeBindingInfoDto);
 
-        verify(employeeBindingRepository, times(employeeBindingInfoDto.getEmployeeBindings().size())).deleteAllByCfoIdAndPersonalNumber(anyString(), anyLong());
+        verify(employeeBindingRepository, times(1)).deleteAllByCfoIdIn(anyList());
         verify(employeeBindingRepository, times(1)).saveAll(anyList());
     }
 
@@ -50,7 +50,7 @@ public class EmployeeBindingServiceImplTest {
     public void saveEmpty() {
         employeeBindingService.save(emptyEmployeeBindingInfoDto);
 
-        verify(employeeBindingRepository, times(0)).deleteAllByCfoIdAndPersonalNumber(anyString(), anyLong());
+        verify(employeeBindingRepository, times(0)).deleteAllByCfoIdIn(anyList());
         verify(employeeBindingRepository, times(0)).saveAll(anyList());
     }
 

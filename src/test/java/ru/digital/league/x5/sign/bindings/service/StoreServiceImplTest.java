@@ -56,7 +56,7 @@ public class StoreServiceImplTest {
     public void save() {
         storeService.save(storeInfoDto);
 
-        verify(storeRepository, times(1)).deleteAllByMdmStoreIdIn(anyList());
+        verify(storeRepository, times(1)).deleteAllByCfoIdIn(anyList());
         verify(storeRepository, times(1)).saveAll(anyList());
     }
 
@@ -65,7 +65,7 @@ public class StoreServiceImplTest {
 
         storeService.save(emptyStoreInfoDto);
 
-        verify(storeRepository, times(0)).deleteAllByMdmStoreIdIn(anyList());
+        verify(storeRepository, times(0)).deleteAllByCfoIdIn(anyList());
         verify(storeRepository, times(0)).saveAll(anyList());
     }
 
