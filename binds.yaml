@@ -1,0 +1,93 @@
+openapi: 3.0.2
+info:
+  title: 'Микросервис "Привязки"'
+  description: "Настоящий документ составлен в рамках OpenAPI Specification v.3.0.2"
+  version: "1.0"
+tags:
+  - name: "binds"
+paths:
+  /binds/{personalNumber}:
+    get:
+      tags: 
+      - "binds"
+      summary: "Получение списка магазинов"
+      description: "Метод для получения списка магазинов, к которым привязан пользователь"
+      operationId: "getBinds"
+      parameters:
+      - name: "personalNumber"
+        in: "path"
+        description: "Табельный номер сотрудника"
+        schema:
+          type: "string"
+        required: true
+        example: "11111"
+      responses:
+        "200":
+          description: "Stores list"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  SAPcode:
+                    type: "array"
+                    items:
+                      type: "string"
+                    example:
+                    - 13654561
+                    - 65465456
+        "400":
+          description: "Invalid user Id supplied"
+        "404":
+          description: "User not found"
+  /documents/{storeId}:
+    get:
+      tags: 
+      - "binds"
+      summary: "Получение информации о магазине"
+      description: "Метод для получения информации о магазине по коду магазина"
+      operationId: "getInfoStore"
+      parameters:
+      - name: "storeId"
+        in: "path"
+        description: "Код магазина SAP"
+        schema:
+          type: "string"
+        required: true
+        example: "3402"
+      responses:
+        "200":
+          description: "Store Info"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  MDM_ID:
+                    type: "string"
+                    description: "Код завода SAP"
+                    example: "3402"
+                  NAME:
+                    type: "string"
+                    description: "Название магазина для отображения"
+                    example: "4467-Пятерочка."
+                  CFO:
+                    type: "string"
+                    description: "Код ЦФО"
+                    example: "E1007345"
+                  ADDRESS_TEXT:
+                    type: "string"
+                    description: "Адрес магазина"
+                    example: "184510, Мурманская обл, Мончегорск г, Бредова ул, 30"
+                  OPEN_DATE:
+                    type: "string"
+                    description: "Дата открытия магазина"
+                    example: "2014-07-10"
+                  CLOSE_DATE:
+                    type: "string"
+                    description: "Дата закрытия магазина"
+                    example: ""
+        "400":
+          description: "Invalid store Id supplied"
+        "404":
+          description: "Store not found"
