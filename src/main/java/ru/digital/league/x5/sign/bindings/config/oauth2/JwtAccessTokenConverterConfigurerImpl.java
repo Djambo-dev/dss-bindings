@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAccessTokenConverterConfigurerImpl implements JwtAccessTokenConverterConfigurer {
 
-	@Override
-	public void configure(JwtAccessTokenConverter converter) {
-		converter.setAccessTokenConverter(new CustomAccessTokenConverter());
-	}
+    @Override
+    public void configure(JwtAccessTokenConverter converter) {
+        converter.setAccessTokenConverter(new CustomAccessTokenConverter());
+    }
 }

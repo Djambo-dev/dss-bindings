@@ -1,8 +1,7 @@
 package ru.digital.league.x5.sign.bindings.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +9,9 @@ import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MessageServiceImpl implements MessageService {
     private final static Locale ru_RU = new Locale("ru", "RU");
-
-    private final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
     private final ResourceBundleMessageSource messageSource;
 
@@ -21,7 +19,7 @@ public class MessageServiceImpl implements MessageService {
         try {
             return messageSource.getMessage(code, null, ru_RU);
         } catch (Exception e) {
-            logger.warn("Get message key='" + code + "' error:" + e.getMessage());
+            log.warn("Get message key='" + code + "' error:" + e.getMessage());
         }
         return code;
     }
