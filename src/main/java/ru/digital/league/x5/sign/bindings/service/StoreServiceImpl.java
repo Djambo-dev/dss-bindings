@@ -58,4 +58,14 @@ public class StoreServiceImpl implements StoreService {
 
         return storeDtos;
     }
+
+    @Override
+    public StoreDto getStoreByStoreId(String storeId) {
+        StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
+        StoreDto storeDto = modelMapper.map(storeEntity, StoreDto.class);
+
+        log.info("Found store {} by store id {}", storeDto, storeId);
+
+        return storeDto;
+    }
 }

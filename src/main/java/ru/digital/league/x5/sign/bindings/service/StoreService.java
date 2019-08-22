@@ -9,4 +9,6 @@ public interface StoreService {
     void save(StoreInfoDto storeInfo);
 
     List<StoreDto> getStoresByPersonalNumber(Long personalNumber);
+
+    StoreDto getStoreByStoreId(String storeId);
 }
