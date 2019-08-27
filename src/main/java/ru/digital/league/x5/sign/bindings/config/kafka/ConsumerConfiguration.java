@@ -86,7 +86,7 @@ public class ConsumerConfiguration {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         if (sslEnable) {
             props.put("security.protocol", "SSL");
-            props.put("ssl.keystore.location", keyStorePath );
+            props.put("ssl.keystore.location", keyStorePath);
             props.put("ssl.keystore.password", keyStorePassword);
             props.put("ssl.truststore.location", trustStorePath);
             props.put("ssl.truststore.password", trustStorePassword);

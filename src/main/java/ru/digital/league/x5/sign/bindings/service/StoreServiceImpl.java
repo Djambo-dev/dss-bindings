@@ -1,9 +1,8 @@
 package ru.digital.league.x5.sign.bindings.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -17,9 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StoreServiceImpl implements StoreService {
-
-    private final Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
 
     private final StoreRepository storeRepository;
     private final ModelMapper modelMapper;
@@ -38,11 +36,11 @@ public class StoreServiceImpl implements StoreService {
                     .distinct()
                     .collect(Collectors.toList());
 
-            logger.info("Deleting existing store records");
+            log.info("Deleting existing store records");
 
             storeRepository.deleteAllByCfoIdIn(cfoIds);
 
-            logger.info("Saving stores {} to DB", storeEntities);
+            log.info("Saving stores {} to DB", storeEntities);
 
             storeRepository.saveAll(storeEntities);
         }
@@ -56,8 +54,18 @@ public class StoreServiceImpl implements StoreService {
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
                 .collect(Collectors.toList());
 
-        logger.info("Stores for document service: {}", storeDtos);
+        log.info("Stores for document service: {}", storeDtos);
 
         return storeDtos;
+    }
+
+    @Override
+    public StoreDto getStoreByStoreId(String storeId) {
+        StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
+        StoreDto storeDto = modelMapper.map(storeEntity, StoreDto.class);
+
+        log.info("Found store {} by store id {}", storeDto, storeId);
+
+        return storeDto;
     }
 }

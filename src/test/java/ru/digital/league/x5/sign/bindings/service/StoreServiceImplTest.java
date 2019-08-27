@@ -36,7 +36,9 @@ public class StoreServiceImplTest {
     private StoreInfoDto storeInfoDto;
     private StoreInfoDto emptyStoreInfoDto;
     private Long personalNumber;
-    private List<StoreEntity> stores;
+    private String mdmStoreId;
+    private StoreEntity storeEntity;
+    private List<StoreEntity> storeEntities;
     private List<StoreDto> storeDtos;
 
     @Before
@@ -47,9 +49,11 @@ public class StoreServiceImplTest {
         emptyStoreInfoDto = TestData.emptyStoreInfoDto();
         personalNumber = 111L;
         storeDtos = Arrays.asList(TestData.storeDto1(), TestData.storeDto2());
-        stores = storeDtos.stream()
+        storeEntities = storeDtos.stream()
                 .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                 .collect(Collectors.toList());
+        mdmStoreId = "3402";
+        storeEntity = modelMapper.map(TestData.storeDto1(), StoreEntity.class);
     }
 
     @Test
@@ -70,9 +74,9 @@ public class StoreServiceImplTest {
     }
 
     @Test
-    public void getStoreIdsByPersonalNumber() {
+    public void getStoresByPersonalNumber() {
 
-        when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(stores);
+        when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
 
         List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
 
@@ -80,5 +84,16 @@ public class StoreServiceImplTest {
 
         assertEquals(storesByPersonalNumber, storeDtos);
 
+    }
+
+    @Test
+    public void getStoreByStoreId() {
+        when(storeRepository.findByMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
+
+        StoreDto storeByStoreId = storeService.getStoreByStoreId(mdmStoreId);
+
+        verify(storeRepository, times(1)).findByMdmStoreId(mdmStoreId);
+
+        assertEquals(storeByStoreId, TestData.storeDto1());
     }
 }

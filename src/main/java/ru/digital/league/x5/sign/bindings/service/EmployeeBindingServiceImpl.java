@@ -1,9 +1,8 @@
 package ru.digital.league.x5.sign.bindings.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -16,9 +15,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeBindingServiceImpl implements EmployeeBindingService {
-
-    private final Logger logger = LoggerFactory.getLogger(EmployeeBindingServiceImpl.class);
 
     private final EmployeeBindingRepository employeeBindingRepository;
     private final ModelMapper modelMapper;
@@ -38,11 +36,11 @@ public class EmployeeBindingServiceImpl implements EmployeeBindingService {
                     .collect(Collectors.toList());
 
 
-            logger.info("Deleting existing employee binding records");
+            log.info("Deleting existing employee binding records");
 
             employeeBindingRepository.deleteAllByCfoIdIn(updatedCfoIds);
 
-            logger.info("Saving employee bindings {} to DB", employeeBindingEntities);
+            log.info("Saving employee bindings {} to DB", employeeBindingEntities);
 
             employeeBindingRepository.saveAll(employeeBindingEntities);
         }

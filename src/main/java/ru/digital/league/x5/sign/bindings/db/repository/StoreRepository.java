@@ -15,4 +15,6 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") Long personalNumber);
 
     void deleteAllByCfoIdIn(List<String> cfoIds);
+
+    StoreEntity findByMdmStoreId(String storeId);
 }
