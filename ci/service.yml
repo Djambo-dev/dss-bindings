@@ -120,7 +120,7 @@ parameters:
   displayName: CPU Limit
   name: CPU_LIMIT
   required: true
-  value: 1000m
+  value: 500m
 - description: Set this to the relative path to your project if it is not in the root
     of your repository.
   displayName: Context Directory
