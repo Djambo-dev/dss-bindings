@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url "https://art.x5.ru/maven/" }
         maven { url "https://nx.x5.ru/repository/maven/" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
@@ -30,6 +31,7 @@ configurations {
 }
 
 repositories {
+    maven { url "https://art.x5.ru/maven/" }
     maven { url 'https://nx.x5.ru/repository/maven/' }
     mavenCentral()
 }
