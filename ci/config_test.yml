@@ -9,7 +9,7 @@ data:
   PG_HOST: "services.x5.phoenixit.ru"
   PG_PORT: "5432"
   PG_DATABASE: "docsign"
-  SECURITY_ENABLED: 'false'
+  ENABLE_SECURITY: 'true'
   KAFKA_URL: "services.x5.phoenixit.ru:9093"
   KAFKA_CONSUMER_GROUP_ID: "bindings-group"
   KAFKA_INBOX_BINDINGS_TOPIC: "topic-bindings"

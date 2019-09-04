@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+logging:
+  level:
+    root: info
+
 spring:
   kafka:
     bootstrap-servers: ${KAFKA_URL}

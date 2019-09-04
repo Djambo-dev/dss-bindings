@@ -1,0 +1,87 @@
+openapi: 3.0.2
+info:
+  title: 'Микросервис "Привязки"'
+  description: "Настоящий документ составлен в рамках OpenAPI Specification v.3.0.2"
+  version: "1.2"
+tags:
+  - name: "stores"
+paths:
+  /binding/{personalNumber}:
+    get:
+      tags:
+        - "stores"
+      summary: "Получение списка магазинов"
+      description: "Метод для получения списка магазинов, к которым привязан пользователь"
+      operationId: "getBinds"
+      parameters:
+        - name: "personalNumber"
+          in: "path"
+          description: "Табельный номер сотрудника"
+          schema:
+            type: "string"
+          required: true
+          example: "11111"
+      responses:
+        "200":
+          description: "Cписок магазинов, к которым привязан сотрудник"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/stores"
+        "500":
+          description: "Internal Server Error"
+  /store/{storeId}:
+    get:
+      tags:
+        - "stores"
+      summary: "Получение информации о магазине"
+      description: "Метод для получения информации о магазине по коду магазина"
+      operationId: "getInfoStore"
+      parameters:
+        - name: "storeId"
+          in: "path"
+          description: "Код магазина SAP"
+          schema:
+            type: "string"
+          required: true
+          example: "3402"
+      responses:
+        "200":
+          description: "Информация о магазине"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/stores"
+        "500":
+          description: "Internal Server Error"
+components:
+  schemas:
+    stores:
+      type: "object"
+      properties:
+        mdmStoreId:
+          type: "string"
+          description: "Код завода SAP"
+          example: "3402"
+        name:
+          type: "string"
+          description: "Название магазина для отображения"
+          example: "4467-Пятерочка."
+        cfoId:
+          type: "string"
+          description: "Код ЦФО"
+          example: "E1007345"
+        address:
+          type: "string"
+          description: "Адрес магазина"
+          example: "184510, Мурманская обл, Мончегорск г, Бредова ул, 30"
+        openDate:
+          type: "string"
+          description: "Дата открытия магазина"
+          example: "2014-07-10"
+        closeDate:
+          type: "string"
+          description: "Дата закрытия магазина"
+          example: ""
