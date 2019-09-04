@@ -115,12 +115,12 @@ parameters:
   displayName: Memory Limit
   name: MEMORY_LIMIT
   required: true
-  value: 2048Mi
+  value: 1024Mi
 - description: Maximum amount of CPU the container can use.
   displayName: CPU Limit
   name: CPU_LIMIT
   required: true
-  value: 1000m
+  value: 500m
 - description: Set this to the relative path to your project if it is not in the root
     of your repository.
   displayName: Context Directory
@@ -143,7 +143,7 @@ parameters:
   displayName: Secret name
   required: true
   name: SECRET_NAME
-  value: dss-common-secret
+  value: ${NAME}-secret
 - description: Secret volume
   displayName: Secret volume
   required: true
