@@ -13,6 +13,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   IMAGE: "${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
+  SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
 stages:
   - build
