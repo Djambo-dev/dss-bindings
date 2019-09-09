@@ -25,24 +25,19 @@ public class StoreServiceImpl implements StoreService {
     @Override
     @Transactional
     public void save(StoreInfoDto storeInfo) {
-
         if (!CollectionUtils.isEmpty(storeInfo.getStores())) {
+            log.info("Saving store records...:{}", storeInfo);
             List<StoreEntity> storeEntities = storeInfo.getStores().stream()
                     .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                     .collect(Collectors.toList());
-
             List<String> cfoIds = storeEntities.stream()
                     .map(StoreEntity::getCfoId)
                     .distinct()
                     .collect(Collectors.toList());
-
-            log.info("Deleting existing store records");
-
             storeRepository.deleteAllByCfoIdIn(cfoIds);
-
-            log.info("Saving stores {} to DB", storeEntities);
-
-            storeRepository.saveAll(storeEntities);
+            log.info("Deleted existing store records...: {}", cfoIds);
+            storeEntities = storeRepository.saveAll(storeEntities);
+            log.info("Saved stores {} to DB", storeEntities);
         }
     }
 
