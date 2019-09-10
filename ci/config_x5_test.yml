@@ -4,8 +4,6 @@ metadata:
   creationTimestamp: null
   name: dss-bindings-config
 data:
-# in secret   PG_USER:
-# in secret   PG_PASSWORD:
   PG_HOST: "MSK-DPRO-PSG146"
   PG_PORT: "5432"
   PG_DATABASE: "docsign"
@@ -17,10 +15,14 @@ data:
   KAFKA_SSL_ENABLE: "true"
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
-# in secret  KAFKA_KEY_STORE_PASSWORD:
-# in secret KAFKA_TRUST_STORE_PASSWORD:
   JAVA_TOOL_OPTIONS: >
     -Djava.security.egd=file:/dev/./urandom
     -Dspring.profiles.active=production
     -Xms100M
     -Xmx1024M
+
+# in secret PG_USER:
+# in secret PG_PASSWORD:
+# in secret KAFKA_KEY_STORE_PASSWORD:
+# in secret KAFKA_TRUST_STORE_PASSWORD:
+# in secret PUBLIC_KEYCLOAK_KEY:
