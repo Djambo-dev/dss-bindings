@@ -3,7 +3,7 @@ server:
 
 logging:
   level:
-    root: info
+    root: ${LOG_LEVEL:INFO}
 
 spring:
   kafka:
