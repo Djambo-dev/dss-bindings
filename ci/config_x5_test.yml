@@ -15,6 +15,7 @@ data:
   KAFKA_SSL_ENABLE: "true"
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
+  LOG_LEVEL: 'INFO'
   JAVA_TOOL_OPTIONS: >
     -Djava.security.egd=file:/dev/./urandom
     -Dspring.profiles.active=production
