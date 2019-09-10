@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.bad.BadEmployeeBindingInfoDto;
 import ru.digital.league.x5.sign.bindings.service.EmployeeBindingService;
 import ru.digital.league.x5.sign.bindings.service.MessageService;
 
@@ -18,6 +19,9 @@ public class EmployeeBindingListener {
 
     @KafkaListener(topics = "${kafka.topic.inbox_bindings}", containerFactory = "employeeBindingKafkaListenerContainerFactory")
     public void receive(EmployeeBindingInfoDto employeeBindingInfo) {
+        if (employeeBindingInfo instanceof BadEmployeeBindingInfoDto) {
+            return;
+        }
         try {
             log.info("Got employeeBindingInfo {} from Kafka", employeeBindingInfo);
             employeeBindingService.save(employeeBindingInfo);

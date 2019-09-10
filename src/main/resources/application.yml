@@ -3,13 +3,17 @@ server:
 
 logging:
   level:
-    root: info
+    root: ${LOG_LEVEL:INFO}
 
 spring:
   kafka:
     bootstrap-servers: ${KAFKA_URL}
     consumer:
       group-id: ${KAFKA_CONSUMER_GROUP_ID}
+    reconnect:
+      backoff:
+        ms: ${KAFKA_RECONNECT_BACKOFF:1000}
+        max_ms: ${KAFKA_RECONNECT_BACKOFF_MAX:60000}
   autoconfigure:
     exclude: "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
   datasource:

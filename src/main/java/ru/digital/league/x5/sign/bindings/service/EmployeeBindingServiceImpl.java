@@ -24,7 +24,7 @@ public class EmployeeBindingServiceImpl implements EmployeeBindingService {
     @Override
     @Transactional
     public void save(EmployeeBindingInfoDto employeeBindingInfo) {
-
+        log.info("Saving employee bindings...: {}", employeeBindingInfo);
         if (!CollectionUtils.isEmpty(employeeBindingInfo.getEmployeeBindings())) {
             List<EmployeeBindingEntity> employeeBindingEntities = employeeBindingInfo.getEmployeeBindings().stream()
                     .map(bindingDto -> modelMapper.map(bindingDto, EmployeeBindingEntity.class))
@@ -34,15 +34,10 @@ public class EmployeeBindingServiceImpl implements EmployeeBindingService {
                     .map(EmployeeBindingEntity::getCfoId)
                     .distinct()
                     .collect(Collectors.toList());
-
-
-            log.info("Deleting existing employee binding records");
-
             employeeBindingRepository.deleteAllByCfoIdIn(updatedCfoIds);
-
-            log.info("Saving employee bindings {} to DB", employeeBindingEntities);
-
-            employeeBindingRepository.saveAll(employeeBindingEntities);
+            log.info("Deleted existing employee binding...: {}", updatedCfoIds);
+            employeeBindingEntities = employeeBindingRepository.saveAll(employeeBindingEntities);
+            log.info("Saved employee bindings {} to DB", employeeBindingEntities);
         }
     }
 }
