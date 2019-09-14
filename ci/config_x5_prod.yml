@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: dss-bindings-config
+data:
+  PG_HOST: "SERVER"
+  PG_PORT: "5432"
+  PG_DATABASE: "docsign"
+  ENABLE_SECURITY: 'true'
+  KAFKA_URL: "SERVER:9093"
+  KAFKA_CONSUMER_GROUP_ID: "bindings-group"
+  KAFKA_INBOX_BINDINGS_TOPIC: "topic-bindings"
+  KAFKA_INBOX_STORES_TOPIC: "topic-stores"
+  KAFKA_SSL_ENABLE: "true"
+  KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
+  KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
+  LOG_LEVEL: 'ERROR'
+
+# in secret PG_USER:
+# in secret PG_PASSWORD:
+# in secret KAFKA_KEY_STORE_PASSWORD:
+# in secret KAFKA_TRUST_STORE_PASSWORD:
+# in secret PUBLIC_KEYCLOAK_KEY:

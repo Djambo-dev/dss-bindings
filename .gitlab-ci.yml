@@ -1,17 +1,30 @@
-# Зарегать переменные NEXUS_REGISTRY NEXUS_LOGIN NEXUS_PASSWORD NEXUS_PATH SECRET_NAME  NAMESPACE STAND BASE_IMAGE
+# in GITLAB register variables:
+# NAMESPACE_TEST         - project in openshift (testing stage)
+# NAMESPACE_PROD         - project in openshift (production stage)
+# REGISTRY_URL           - docker registry address
+# REGISTRY_LOGIN         - docker registry login
+# REGISTRY_PASSWORD      - docker regisry password
+# OPENSHIFT_URL_TEST     - openshift API url (testing stage)
+# OPENSHIFT_URL_PROD     - openshift API url (production stage)
+# OPENSHIFT_TOKEN_TEST   - openshift serviceaccount token (testing stage)
+# OPENSHIFT_TOKEN_PROD   - openshift serviceaccount token (production stage)
+# CONFIG_TEST            - config file name in ci/  (testing stage)
+# CONFIG_PROD            - config file name in ci/  (production stage)
+# BASE_IMAGE             - docker image for replacement in Dockerfile while deploy (per repository)
 
 image: docker:stable
 services:
   - name: docker:dind
     command:
-      - "--insecure-registry=registry.x5.phoenixit.ru"
+      - "--insecure-registry=registry.x5.phoenixit.ru"  # For developer stage
 
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
+  REGISTRY_PATH: "doc-sign"
   DOCKER_DRIVER: overlay2
 #  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
-  IMAGE: "${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}"
+  IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
   SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
@@ -27,7 +40,6 @@ build:
   image: gradle:jdk11
   stage: build
   script:
-#    - ./gradlew build
      - gradle clean build
   artifacts:
     paths:
@@ -39,7 +51,7 @@ build:
 package:
   stage: containerize
   before_script:
-    - docker login -u $NEXUS_LOGIN -p $NEXUS_PASSWORD $NEXUS_REGISTRY
+    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
   script:
     - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
@@ -57,15 +69,35 @@ package:
 deploy_test:
   stage: deploy
   variables:
+    NAMESPACE: ${NAMESPACE_TEST}
+    OPENSHIFT_URL: ${OPENSHIFT_URL_TEST}
+    OPENSHIFT_TOKEN: ${OPENSHIFT_TOKEN_TEST}
+    CONFIGMAP: ${CONFIG_TEST}
   image: openshift/origin-cli
   script:
-    - oc login ${OKD_URL} --token=${OKD_TOKEN} --insecure-skip-tls-verify
+    - oc login ${OPENSHIFT_URL} --token=${OPENSHIFT_TOKEN} --insecure-skip-tls-verify
     - oc project ${NAMESPACE}
-#    - oc create configmap ${CI_PROJECT_NAME}-config --from-file=env/config_${STAND}.yml --dry-run -o yaml | oc apply -n ${NAMESPACE} -f -
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
-    - oc apply -f ci/config_${STAND}.yml -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${NEXUS_REGISTRY}/${NEXUS_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME} | oc apply -n ${NAMESPACE} -f -
-#    - oc tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${CI_PROJECT_NAME}:latest
+    - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+  when: manual
+  only:
+    - master
+
+deploy_prod:
+  stage: deploy
+  variables:
+    NAMESPACE: ${NAMESPACE_PROD}
+    OPENSHIFT_URL: ${OPENSHIFT_URL_PROD}
+    OPENSHIFT_TOKEN: ${OPENSHIFT_TOKEN_PROD}
+    CONFIGMAP: ${CONFIG_PROD}
+  image: openshift/origin-cli
+  script:
+    - oc login ${OPENSHIFT_URL} --token=${OPENSHIFT_TOKEN} --insecure-skip-tls-verify
+    - oc project ${NAMESPACE}
+    - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
+    - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
   only:
     - master
