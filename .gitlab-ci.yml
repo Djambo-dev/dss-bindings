@@ -24,7 +24,7 @@ variables:
   DOCKER_DRIVER: overlay2
 #  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
-  IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}"
+  IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
   SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
@@ -45,8 +45,6 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 day
-  only:
-    - master
 
 package:
   stage: containerize
@@ -56,15 +54,13 @@ package:
     - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
     - cp Dockerfile_tmp Dockerfile
-    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
-    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker build --pull -t ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
+    - docker push ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker push ${IMAGE}:latest
-    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE}:latest
   when: manual
-  only:
-    - master
 
 deploy_test:
   stage: deploy
@@ -79,10 +75,8 @@ deploy_test:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
-  only:
-    - master
 
 deploy_prod:
   stage: deploy
@@ -97,7 +91,7 @@ deploy_prod:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
   only:
-    - master
+    - /^release.*$/
