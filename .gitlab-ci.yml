@@ -15,8 +15,6 @@
 image: docker:stable
 services:
   - name: docker:dind
-    command:
-      - "--insecure-registry=registry.x5.phoenixit.ru"  # For developer stage
 
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
