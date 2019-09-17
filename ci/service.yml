@@ -46,7 +46,7 @@ objects:
       template.alpha.openshift.io/wait-for-ready: "true"
     name: ${NAME}
   spec:
-    replicas: 1
+    replicas: "${{REPLICA_COUNT}}"
     selector:
       name: ${NAME}
     strategy:
@@ -111,6 +111,11 @@ parameters:
   name: NAMESPACE
   required: true
   value: openshift
+- description: Number of replicas to run
+  displayName: Replica Count
+  name: REPLICA_COUNT
+  required: true
+  value: "1"
 - description: Maximum amount of memory the container can use.
   displayName: Memory Limit
   name: MEMORY_LIMIT

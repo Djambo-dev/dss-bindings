@@ -73,7 +73,12 @@ deploy_test:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml 
+      NAME=${CI_PROJECT_NAME} 
+      IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" 
+      NAMESPACE=${NAMESPACE} 
+      CONFIG_NAME=${CONFIG_NAME} 
+      SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
 
 deploy_prod:
@@ -89,7 +94,15 @@ deploy_prod:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml 
+      NAME=${CI_PROJECT_NAME} 
+      IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}" 
+      NAMESPACE=${NAMESPACE} 
+      REPLICA_COUNT=${PROD_REPLICAS}
+      CPU_LIMIT=${CPU_LIMIT_PROD}
+      MEMORY_LIMIT=${MEMORY_LIMIT_PROD}
+      CONFIG_NAME=${CONFIG_NAME} 
+      SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
   only:
     - /^release.*$/
