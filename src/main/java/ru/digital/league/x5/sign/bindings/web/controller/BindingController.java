@@ -20,13 +20,13 @@ public class BindingController {
 
     @GetMapping(value = "/binding/{personalNumber}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public List<StoreDto> getStoresByPersonalNumber(@PathVariable("personalNumber") Long personalNumber) {
-        log.info("Searching for stores for employee with personal number {}", personalNumber);
+        log.debug("Searching for stores for employee with personal number {}", personalNumber);
         return storeService.getStoresByPersonalNumber(personalNumber);
     }
 
     @GetMapping(value = "/store/{storeId}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public StoreDto getStoreByStoreId(@PathVariable("storeId") String storeId) {
-        log.info("Searching for store with store id {}", storeId);
+        log.debug("Searching for store with store id {}", storeId);
         return storeService.getStoreByStoreId(storeId);
     }
 }
