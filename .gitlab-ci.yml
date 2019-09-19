@@ -36,7 +36,7 @@ stages:
 before_script:
   - export GRADLE_USER_HOME=/home/gradle/project
 
-build:
+build_master:
   image: gradle:jdk11
   stage: build
   script:
@@ -48,7 +48,31 @@ build:
   only:
     - master
 
-package:
+build_x5_test:
+  image: gradle:jdk11
+  stage: build
+  script:
+     - gradle clean build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 day
+  only:
+    - dev
+    
+build_x5_prod:
+  image: gradle:jdk11
+  stage: build
+  script:
+     - gradle clean build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 day
+  only:
+    - release    
+
+package_master:
   stage: containerize
   before_script:
     - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
@@ -66,7 +90,43 @@ package:
   only:
     - master
 
-deploy_test:
+package_x5_test:
+  stage: containerize
+  before_script:
+    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
+  script:
+    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
+    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
+    - cp Dockerfile_tmp Dockerfile
+    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
+    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker push ${IMAGE}:latest
+    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE}:latest
+  when: manual
+  only:
+    - dev
+
+package_x5_prod:
+  stage: containerize
+  before_script:
+    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
+  script:
+    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
+    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
+    - cp Dockerfile_tmp Dockerfile
+    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
+    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker push ${IMAGE}:latest
+    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE}:latest
+  when: manual
+  only:
+    - release
+
+deploy_master:
   stage: deploy
   variables:
     NAMESPACE: ${NAMESPACE_TEST}
@@ -84,7 +144,25 @@ deploy_test:
   only:
     - master
 
-deploy_prod:
+deploy_x5_test:
+  stage: deploy
+  variables:
+    NAMESPACE: ${NAMESPACE_TEST}
+    OPENSHIFT_URL: ${OPENSHIFT_URL_TEST}
+    OPENSHIFT_TOKEN: ${OPENSHIFT_TOKEN_TEST}
+    CONFIGMAP: ${CONFIG_TEST}
+  image: openshift/origin-cli
+  script:
+    - oc login ${OPENSHIFT_URL} --token=${OPENSHIFT_TOKEN} --insecure-skip-tls-verify
+    - oc project ${NAMESPACE}
+    - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
+    - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
+    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+  when: manual
+  only:
+    - dev
+
+deploy_x5_prod:
   stage: deploy
   variables:
     NAMESPACE: ${NAMESPACE_PROD}
@@ -100,4 +178,4 @@ deploy_prod:
     - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
   only:
-    - master
+    - release
