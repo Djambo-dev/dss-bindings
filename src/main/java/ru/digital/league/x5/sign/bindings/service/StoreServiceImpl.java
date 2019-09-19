@@ -57,10 +57,12 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreDto getStoreByStoreId(String storeId) {
         StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
+        if (storeEntity == null){
+            log.warn("Not found store by id {}", storeId);
+            return null;
+        }
         StoreDto storeDto = modelMapper.map(storeEntity, StoreDto.class);
-
-        log.info("Found store {} by store id {}", storeDto, storeId);
-
+        log.debug("Found store {} by store id {}", storeDto, storeId);
         return storeDto;
     }
 }
