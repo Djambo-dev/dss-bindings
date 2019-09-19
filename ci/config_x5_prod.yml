@@ -4,11 +4,11 @@ metadata:
   creationTimestamp: null
   name: dss-bindings-config
 data:
-  PG_HOST: "SERVER"
+  PG_HOST: "MSK-DPRO-PSG154"
   PG_PORT: "5432"
   PG_DATABASE: "docsign"
   ENABLE_SECURITY: 'true'
-  KAFKA_URL: "SERVER:9093"
+  KAFKA_URL: "msk-dpro-apl280.x5.ru:9093,msk-dpro-apl281.x5.ru:9093,msk-dpro-apl282.x5.ru:9093"
   KAFKA_CONSUMER_GROUP_ID: "bindings-group"
   KAFKA_INBOX_BINDINGS_TOPIC: "topic-bindings"
   KAFKA_INBOX_STORES_TOPIC: "topic-stores"

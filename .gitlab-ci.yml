@@ -15,8 +15,6 @@
 image: docker:stable
 services:
   - name: docker:dind
-    command:
-      - "--insecure-registry=registry.x5.phoenixit.ru"  # For developer stage
 
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
@@ -24,7 +22,7 @@ variables:
   DOCKER_DRIVER: overlay2
 #  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
-  IMAGE: "${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}"
+  IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
   SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
@@ -36,7 +34,7 @@ stages:
 before_script:
   - export GRADLE_USER_HOME=/home/gradle/project
 
-build_master:
+build:
   image: gradle:jdk11
   stage: build
   script:
@@ -45,34 +43,8 @@ build_master:
     paths:
       - build/libs/*.jar
     expire_in: 1 day
-  only:
-    - master
 
-build_x5_test:
-  image: gradle:jdk11
-  stage: build
-  script:
-     - gradle clean build
-  artifacts:
-    paths:
-      - build/libs/*.jar
-    expire_in: 1 day
-  only:
-    - dev
-    
-build_x5_prod:
-  image: gradle:jdk11
-  stage: build
-  script:
-     - gradle clean build
-  artifacts:
-    paths:
-      - build/libs/*.jar
-    expire_in: 1 day
-  only:
-    - release    
-
-package_master:
+package:
   stage: containerize
   before_script:
     - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
@@ -80,53 +52,15 @@ package_master:
     - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
     - cp Dockerfile_tmp Dockerfile
-    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
-    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker build --pull -t ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
+    - docker push ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker push ${IMAGE}:latest
-    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE}:latest
   when: manual
-  only:
-    - master
 
-package_x5_test:
-  stage: containerize
-  before_script:
-    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
-  script:
-    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
-    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
-    - cp Dockerfile_tmp Dockerfile
-    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
-    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE}:latest
-    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker rmi ${IMAGE}:latest
-  when: manual
-  only:
-    - dev
-
-package_x5_prod:
-  stage: containerize
-  before_script:
-    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
-  script:
-    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
-    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
-    - cp Dockerfile_tmp Dockerfile
-    - docker build --pull -t ${IMAGE}:${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
-    - docker push ${IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE}:latest
-    - docker rmi ${IMAGE}:${CI_COMMIT_SHA:0:8}
-    - docker rmi ${IMAGE}:latest
-  when: manual
-  only:
-    - release
-
-deploy_master:
+deploy_test:
   stage: deploy
   variables:
     NAMESPACE: ${NAMESPACE_TEST}
@@ -139,30 +73,15 @@ deploy_master:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml
+      NAME=${CI_PROJECT_NAME}
+      IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}"
+      NAMESPACE=${NAMESPACE}
+      CONFIG_NAME=${CONFIG_NAME}
+      SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
-  only:
-    - master
 
-deploy_x5_test:
-  stage: deploy
-  variables:
-    NAMESPACE: ${NAMESPACE_TEST}
-    OPENSHIFT_URL: ${OPENSHIFT_URL_TEST}
-    OPENSHIFT_TOKEN: ${OPENSHIFT_TOKEN_TEST}
-    CONFIGMAP: ${CONFIG_TEST}
-  image: openshift/origin-cli
-  script:
-    - oc login ${OPENSHIFT_URL} --token=${OPENSHIFT_TOKEN} --insecure-skip-tls-verify
-    - oc project ${NAMESPACE}
-    - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
-    - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
-  when: manual
-  only:
-    - dev
-
-deploy_x5_prod:
+deploy_prod:
   stage: deploy
   variables:
     NAMESPACE: ${NAMESPACE_PROD}
@@ -175,7 +94,15 @@ deploy_x5_prod:
     - oc project ${NAMESPACE}
     - oc delete configmap ${CONFIG_NAME} --ignore-not-found -n ${NAMESPACE}
     - oc apply -f ci/${CONFIGMAP} -n ${NAMESPACE}
-    - oc process -f ci/service.yml NAME=${CI_PROJECT_NAME} IMAGE="${REGISTRY_URL}/${REGISTRY_PATH}/${CI_PROJECT_NAME}:${CI_COMMIT_SHA:0:8}" NAMESPACE=${NAMESPACE} CONFIG_NAME=${CONFIG_NAME} SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
+    - oc process -f ci/service.yml
+      NAME=${CI_PROJECT_NAME}
+      IMAGE="${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}"
+      NAMESPACE=${NAMESPACE}
+      REPLICA_COUNT=${PROD_REPLICAS}
+      CPU_LIMIT=${CPU_LIMIT_PROD}
+      MEMORY_LIMIT=${MEMORY_LIMIT_PROD}
+      CONFIG_NAME=${CONFIG_NAME}
+      SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
   only:
-    - release
+    - /^release.*$/
