@@ -15,7 +15,7 @@ data:
   KAFKA_SSL_ENABLE: "true"
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
-  LOG_LEVEL: 'ERROR'
+  LOG_LEVEL: 'INFO'
 
 # in secret PG_USER:
 # in secret PG_PASSWORD:
