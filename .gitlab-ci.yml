@@ -15,6 +15,8 @@
 image: docker:stable
 services:
   - name: docker:dind
+    command:
+      - "--dns-search=x5.ru"  # боремся с ошибкой "Could not resolve host: scm.x5.ru" при сборке
 
 variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
