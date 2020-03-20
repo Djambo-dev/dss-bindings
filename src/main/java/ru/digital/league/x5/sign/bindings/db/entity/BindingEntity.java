@@ -6,7 +6,6 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
@@ -14,19 +13,15 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @MappedSuperclass
-public abstract class BusinessEntity {
-
-    @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+public abstract class BindingEntity {
 
     @Column(name = "modified_date")
     private LocalDateTime lastUpdateDate;
 
-    @PrePersist
-    public void prePersist() {
-        this.creationDate = LocalDateTime.now();
-        this.lastUpdateDate = this.creationDate;
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        this.lastUpdateDate = this.creationDate;
+//    }
 
     @PreUpdate
     public void preUpdate() {

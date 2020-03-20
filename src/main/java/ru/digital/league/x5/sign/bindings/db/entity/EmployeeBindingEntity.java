@@ -4,7 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Setter
 @Getter
@@ -12,7 +18,7 @@ import javax.persistence.*;
 @Entity
 @Table(schema = "bindings", name = "employee_bindings")
 @SequenceGenerator(schema = "bindings", name = "employee_bindings_seq", sequenceName = "employee_bindings_seq", allocationSize = 1)
-public class EmployeeBindingEntity extends BusinessEntity {
+public class EmployeeBindingEntity extends BindingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_bindings_seq")

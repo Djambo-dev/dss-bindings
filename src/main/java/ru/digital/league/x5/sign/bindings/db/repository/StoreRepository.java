@@ -10,11 +10,12 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     @Query("SELECT se FROM StoreEntity se " +
-            "LEFT JOIN EmployeeBindingEntity ebe ON se.cfoId = ebe.cfoId " +
+            "LEFT JOIN EmployeeBindingEntity ebe ON se.storeKey.cfoId = ebe.cfoId " +
             "WHERE ebe.personalNumber = :personalNumber AND se.closeDate IS NULL")
     List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") Long personalNumber);
 
-    void deleteAllByCfoIdIn(List<String> cfoIds);
+//    void deleteByCfoIdAndMdmStoreId(String cfoId, String mdmStoreId);
 
-    StoreEntity findByMdmStoreId(String storeId);
+//    StoreEntity findByMdmStoreId(String storeId);
+    StoreEntity findByStoreKeyMdmStoreId(String storeId);
 }
