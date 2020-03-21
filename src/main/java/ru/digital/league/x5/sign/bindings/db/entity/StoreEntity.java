@@ -16,28 +16,15 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @NoArgsConstructor
-//@Builder
 @Entity
-@Table(schema = "bindings", name = "stores1")
-//@SequenceGenerator(schema = "bindings", name = "stores_seq", sequenceName = "stores_seq", allocationSize = 1)
+@Table(schema = "bindings", name = "stores")
 public class StoreEntity extends BindingEntity {
-
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stores_seq")
-//    @Column(name = "store_id")
-//    private Long storeId;
-
-//    @Column(name = "mdm_store_id")
-//    private String mdmStoreId;
 
     @EmbeddedId
     private StoreKey storeKey;
 
     @Column(name = "name")
     private String name;
-
-//    @Column(name = "cfo_id")
-//    private String cfoId;
 
     @Column(name = "address")
     private String address;

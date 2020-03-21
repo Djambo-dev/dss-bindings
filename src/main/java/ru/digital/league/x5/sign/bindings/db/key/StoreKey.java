@@ -1,10 +1,13 @@
 package ru.digital.league.x5.sign.bindings.db.key;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
+@Data
 public class StoreKey implements Serializable {
 
     @Column(name = "mdm_store_id")

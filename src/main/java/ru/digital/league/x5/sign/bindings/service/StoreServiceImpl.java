@@ -22,25 +22,21 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ModelMapper modelMapper;
 
-    @Override
-    @Transactional
-    public void save(StoreInfoDto storeInfo) {
-        if (!CollectionUtils.isEmpty(storeInfo.getStores())) {
-            log.info("Start process saving store({}) ", storeInfo.getStores().size());
-            storeInfo.getStores().forEach(this::updateStore);
-            log.info("End saving {} stores", storeInfo.getStores().size());
-        }
-    }
-
     /**
      * Алгоритм обновления/добавления магазина - когда приходит запись о магазине - мы обновляем эту запись по
      * коду магазина (mdm|sap id) и коду ЦФО (cfo id)
      */
-    private void updateStore(StoreDto storeDto) {
-        StoreEntity storeEntity = modelMapper.map(storeDto, StoreEntity.class);
-        log.info("Process {}", storeEntity);
-        storeRepository.save(storeEntity);
-        log.info("Save stores {}", storeEntity);
+    @Override
+    @Transactional
+    public void save(StoreInfoDto storeInfo) {
+        List<StoreDto> storeDtoList = storeInfo.getStores();
+        if (!CollectionUtils.isEmpty(storeDtoList)) {
+            log.info("Start process saving store({}) ", storeDtoList.size());
+            List<StoreEntity> storeEntityList = storeDtoList.stream().map(s ->modelMapper.map(s, StoreEntity.class)).collect(Collectors.toList());
+            log.info("Processing {}", storeEntityList);
+            storeRepository.saveAll(storeEntityList);
+            log.info("End saving {} stores", storeInfo.getStores().size());
+        }
     }
 
     @Override
