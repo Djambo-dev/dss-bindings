@@ -25,8 +25,8 @@ public class StoreListener {
         try {
             log.info("Got storeInfo {} from Kafka", storeInfo);
             storeService.save(storeInfo);
-        } catch (Exception exception) {
-            throw new RuntimeException(messageService.getMessage("exception.store.save"));
+        } catch (Exception e) {
+            log.error(messageService.getMessage("exception.store.save"), e);
         }
     }
 
