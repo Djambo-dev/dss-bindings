@@ -14,8 +14,5 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
             "WHERE ebe.personalNumber = :personalNumber AND se.closeDate IS NULL")
     List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") Long personalNumber);
 
-//    void deleteByCfoIdAndMdmStoreId(String cfoId, String mdmStoreId);
-
-//    StoreEntity findByMdmStoreId(String storeId);
     StoreEntity findByStoreKeyMdmStoreId(String storeId);
 }

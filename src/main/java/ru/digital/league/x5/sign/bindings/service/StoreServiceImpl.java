@@ -32,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
         List<StoreDto> storeDtoList = storeInfo.getStores();
         if (!CollectionUtils.isEmpty(storeDtoList)) {
             log.info("Start process saving store({}) ", storeDtoList.size());
-            List<StoreEntity> storeEntityList = storeDtoList.stream().map(s ->modelMapper.map(s, StoreEntity.class)).collect(Collectors.toList());
+            List<StoreEntity> storeEntityList = storeDtoList.stream().map(s -> modelMapper.map(s, StoreEntity.class)).collect(Collectors.toList());
             log.info("Processing {}", storeEntityList);
             storeRepository.saveAll(storeEntityList);
             log.info("End saving {} stores", storeInfo.getStores().size());
