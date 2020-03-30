@@ -22,22 +22,20 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ModelMapper modelMapper;
 
+    /**
+     * Алгоритм обновления/добавления магазина - когда приходит запись о магазине - мы обновляем эту запись по
+     * коду магазина (mdm|sap id) и коду ЦФО (cfo id)
+     */
     @Override
     @Transactional
     public void save(StoreInfoDto storeInfo) {
-        if (!CollectionUtils.isEmpty(storeInfo.getStores())) {
-            log.info("Saving store records...:{}", storeInfo);
-            List<StoreEntity> storeEntities = storeInfo.getStores().stream()
-                    .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
-                    .collect(Collectors.toList());
-            List<String> cfoIds = storeEntities.stream()
-                    .map(StoreEntity::getCfoId)
-                    .distinct()
-                    .collect(Collectors.toList());
-            storeRepository.deleteAllByCfoIdIn(cfoIds);
-            log.info("Deleted existing store records...: {}", cfoIds);
-            storeEntities = storeRepository.saveAll(storeEntities);
-            log.info("Saved stores {} to DB", storeEntities);
+        List<StoreDto> storeDtoList = storeInfo.getStores();
+        if (!CollectionUtils.isEmpty(storeDtoList)) {
+            log.info("Start process saving store({}) ", storeDtoList.size());
+            List<StoreEntity> storeEntityList = storeDtoList.stream().map(s -> modelMapper.map(s, StoreEntity.class)).collect(Collectors.toList());
+            log.info("Processing {}", storeEntityList);
+            storeRepository.saveAll(storeEntityList);
+            log.info("End saving {} stores", storeInfo.getStores().size());
         }
     }
 
@@ -56,8 +54,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreDto getStoreByStoreId(String storeId) {
-        StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
-        if (storeEntity == null){
+        StoreEntity storeEntity = storeRepository.findByStoreKeyMdmStoreId(storeId);
+        if (storeEntity == null) {
             log.warn("Not found store by id {}", storeId);
             return null;
         }
