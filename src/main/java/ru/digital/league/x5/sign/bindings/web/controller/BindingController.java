@@ -19,7 +19,7 @@ public class BindingController {
     private final StoreService storeService;
 
     @GetMapping(value = "/binding/{personalNumber}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    public List<StoreDto> getStoresByPersonalNumber(@PathVariable("personalNumber") Long personalNumber) {
+    public List<StoreDto> getStoresByPersonalNumber(@PathVariable("personalNumber") String personalNumber) {
         log.debug("Searching for stores for employee with personal number {}", personalNumber);
         return storeService.getStoresByPersonalNumber(personalNumber);
     }

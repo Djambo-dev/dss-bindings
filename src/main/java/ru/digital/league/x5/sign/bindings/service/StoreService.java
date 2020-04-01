@@ -15,7 +15,7 @@ public interface StoreService {
      * Ищем привязанные к сотруднику магазины по его табельному номеру
      * @param personalNumber табельный номер
      */
-    List<StoreDto> getStoresByPersonalNumber(Long personalNumber);
+    List<StoreDto> getStoresByPersonalNumber(String personalNumber);
 
     /**
      * Ищем магазин по его mdm|sap идентификатору
