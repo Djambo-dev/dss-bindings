@@ -14,11 +14,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeBindingInfoDto {
+public class EmployeeInfoDto {
 
     /**
      * Данные привязок сотрудников
      */
-    private List<EmployeeBindingDto> employeeBindings;
+    private List<EmployeeDto> employeeBindings;
 
 }

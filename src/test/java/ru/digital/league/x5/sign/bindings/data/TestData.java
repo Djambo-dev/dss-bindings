@@ -1,7 +1,7 @@
 package ru.digital.league.x5.sign.bindings.data;
 
-import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingDto;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
 
@@ -49,35 +49,35 @@ public class TestData {
                 .build();
     }
 
-    public static EmployeeBindingInfoDto employeeBindingInfoDto() {
+    public static EmployeeInfoDto employeeInfoDto() {
 
-        List<EmployeeBindingDto> employeeBindingDtos = Arrays.asList(employeeBindingDto1(), employeeBindingDto2());
+        List<EmployeeDto> employeeBindingDtos = Arrays.asList(employeeBindingDto1(), employeeBindingDto2());
 
-        return EmployeeBindingInfoDto.builder()
+        return EmployeeInfoDto.builder()
                 .employeeBindings(employeeBindingDtos)
                 .build();
     }
 
-    public static EmployeeBindingInfoDto emptyEmployeeBindingInfoDto() {
-        return EmployeeBindingInfoDto.builder()
+    public static EmployeeInfoDto emptyEmployeeInfoDto() {
+        return EmployeeInfoDto.builder()
                 .employeeBindings(Collections.emptyList())
                 .build();
     }
 
-    public static EmployeeBindingDto employeeBindingDto1() {
-        return EmployeeBindingDto.builder()
+    public static EmployeeDto employeeBindingDto1() {
+        return EmployeeDto.builder()
                 .cfoId("E1007345")
-                .personalNumber(961135L)
+                .personalNumber("961135")
                 .personalLogin("EKATERINA.PARUBOK")
                 .positionId(50000566L)
                 .positionName("Директор")
                 .build();
     }
 
-    public static EmployeeBindingDto employeeBindingDto2() {
-        return EmployeeBindingDto.builder()
+    public static EmployeeDto employeeBindingDto2() {
+        return EmployeeDto.builder()
                 .cfoId("E11111111")
-                .personalNumber(323445L)
+                .personalNumber("323445")
                 .personalLogin("ILYA.MADDYSON")
                 .positionId(50000566L)
                 .positionName("Супервайзер")
