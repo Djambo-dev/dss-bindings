@@ -64,17 +64,18 @@ public class TestData {
                 .build();
     }
 
-    public static EmployeeDto employeeBindingDto1() {
+    private static EmployeeDto employeeBindingDto1() {
         return EmployeeDto.builder()
                 .cfoId("E1007345")
                 .personalNumber("961135")
                 .personalLogin("EKATERINA.PARUBOK")
                 .positionId(50000566L)
                 .positionName("Директор")
+                .linkedPersonalNumber("098123")
                 .build();
     }
 
-    public static EmployeeDto employeeBindingDto2() {
+    private static EmployeeDto employeeBindingDto2() {
         return EmployeeDto.builder()
                 .cfoId("E11111111")
                 .personalNumber("323445")

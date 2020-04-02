@@ -43,10 +43,11 @@ public class ModelMapperConfig {
                 employeeEntity.setPositionId(source.getPositionId());
                 employeeEntity.setPositionName(source.getPositionName());
                 employeeEntity.setPersonalLogin(source.getPersonalLogin());
-                String linkedPersonalNumber = source.getLinkedPersonalNumber();
-                String personalNumber = source.getPersonalNumber();
-                employeeEntity.setPersonalNumber((linkedPersonalNumber.isBlank()) ? personalNumber : linkedPersonalNumber);
-                employeeEntity.setPartTimePersonalNumber((linkedPersonalNumber.isBlank()) ? null : personalNumber);
+                String linkedPn = source.getLinkedPersonalNumber();
+                boolean isNotExistsLinkedPn = (linkedPn == null || linkedPn.isBlank());
+                String personalNumber = (isNotExistsLinkedPn) ? source.getPersonalNumber() : linkedPn;
+                employeeEntity.setPersonalNumber(personalNumber);
+                employeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : personalNumber);
                 return employeeEntity;
             }
         };

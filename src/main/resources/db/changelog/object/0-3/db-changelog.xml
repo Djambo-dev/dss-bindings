@@ -4,9 +4,5 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <include file="javamob-197.sql" relativeToChangelogFile="true"/>
-<!--    <include file="javamob-191_add_pk_in_sotores.sql" relativeToChangelogFile="true"/>-->
-    <changeSet author="St.Yakovlev" id="javamob-191_add_pk_in_sotores">
-        <sqlFile path="db/changelog/object/0-2/javamob-191_add_pk_in_sotores.sql" splitStatements="false"/>
-    </changeSet>
 
 </databaseChangeLog>

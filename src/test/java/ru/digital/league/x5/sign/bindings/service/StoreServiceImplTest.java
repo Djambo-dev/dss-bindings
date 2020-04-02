@@ -44,7 +44,7 @@ public class StoreServiceImplTest {
     private StoreInfoDto emptyStoreInfoDto;
     private List<StoreDto> storeDtos;
 
-    private Long personalNumber = 111L;
+    private String personalNumber = "111";
     private String mdmStoreId = "3402";
 
     @Before
