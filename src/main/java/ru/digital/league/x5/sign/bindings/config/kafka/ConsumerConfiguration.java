@@ -17,9 +17,9 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.AlwaysRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeBindingInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
-import ru.digital.league.x5.sign.bindings.dto.bad.BadEmployeeBindingInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.bad.BadEmployeeInfoDto;
 import ru.digital.league.x5.sign.bindings.dto.bad.BadStoreInfoDto;
 
 import java.util.HashMap;
@@ -59,12 +59,12 @@ public class ConsumerConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<String, EmployeeBindingInfoDto> employeeBindingKafkaConsumerFactory() {
-        return declareConsumerFactory(EmployeeBindingInfoDto.class, bootstrapServers, groupId, new BadEmployeeBindingInfoDto());
+    public ConsumerFactory<String, EmployeeInfoDto> employeeBindingKafkaConsumerFactory() {
+        return declareConsumerFactory(EmployeeInfoDto.class, bootstrapServers, groupId, new BadEmployeeInfoDto());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EmployeeBindingInfoDto> employeeBindingKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, EmployeeInfoDto> employeeBindingKafkaListenerContainerFactory() {
         return declareListenerContainerFactory(employeeBindingKafkaConsumerFactory());
     }
 

@@ -3,9 +3,8 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <include file="javamob-191.sql" relativeToChangelogFile="true"/>
-    <changeSet author="St.Yakovlev" id="javamob-191_add_pk_in_stores">
-        <sqlFile path="db/changelog/object/0-2/javamob-191_add_pk_in_stores.sql" splitStatements="false"/>
+    <include file="javamob-197.sql" relativeToChangelogFile="true"/>
+    <changeSet author="St.Yakovlev" id="javamob-197_func_rename_column">
+        <sqlFile path="db/changelog/object/0-3/javamob-197_func_rename_column.sql" splitStatements="false"/>
     </changeSet>
-
 </databaseChangeLog>

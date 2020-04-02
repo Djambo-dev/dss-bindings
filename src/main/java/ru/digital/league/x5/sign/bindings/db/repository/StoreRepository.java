@@ -10,9 +10,9 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     @Query("SELECT se FROM StoreEntity se " +
-            "LEFT JOIN EmployeeBindingEntity ebe ON se.storeKey.cfoId = ebe.cfoId " +
+            "LEFT JOIN EmployeeEntity ebe ON se.storeKey.cfoId = ebe.cfoId " +
             "WHERE ebe.personalNumber = :personalNumber AND se.closeDate IS NULL")
-    List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") Long personalNumber);
+    List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") String personalNumber);
 
     StoreEntity findByStoreKeyMdmStoreId(String storeId);
 }

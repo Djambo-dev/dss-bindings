@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeBindingDto {
+public class EmployeeDto {
 
     /**
      * Код ЦФО
@@ -22,7 +22,7 @@ public class EmployeeBindingDto {
     /**
      * Табельный номер сотрудника
      */
-    private Long personalNumber;
+    private String personalNumber;
 
     /**
      * Логин сотрудника в AD (без указания домена)
@@ -38,5 +38,11 @@ public class EmployeeBindingDto {
      * Код должности
      */
     private Long positionId;
+
+    /**
+     * Если это поле инициализировано, то оно содержит основной табельный номер,
+     * а personalNumber - это табельный номер совместителя
+     */
+    private String linkedPersonalNumber;
 
 }

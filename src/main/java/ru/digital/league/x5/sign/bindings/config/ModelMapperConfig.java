@@ -8,8 +8,10 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
+import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.key.StoreKey;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 
 @SuppressWarnings("Convert2Lambda") // если преобразовать, то перестанут корректно работать тесты
@@ -25,8 +27,30 @@ public class ModelMapperConfig {
                 .setSkipNullEnabled(true);
         mapper.addConverter(converterStoreDtoToEntity());
         mapper.addConverter(converterStoreEntityToDto());
+        mapper.addConverter(converterEmployeeDtoToEntity());
 
         return mapper;
+    }
+
+    private Converter<EmployeeDto, EmployeeEntity> converterEmployeeDtoToEntity() {
+        return new Converter<>() {
+            @Override
+            public EmployeeEntity convert(MappingContext<EmployeeDto, EmployeeEntity> context) {
+                EmployeeDto source = context.getSource();
+                Assert.notNull(source, "Object of convert is missing");
+                EmployeeEntity employeeEntity = new EmployeeEntity();
+                employeeEntity.setCfoId(source.getCfoId());
+                employeeEntity.setPositionId(source.getPositionId());
+                employeeEntity.setPositionName(source.getPositionName());
+                employeeEntity.setPersonalLogin(source.getPersonalLogin());
+                String linkedPn = source.getLinkedPersonalNumber();
+                boolean isNotExistsLinkedPn = (linkedPn == null || linkedPn.isBlank());
+                String personalNumber = (isNotExistsLinkedPn) ? source.getPersonalNumber() : linkedPn;
+                employeeEntity.setPersonalNumber(personalNumber);
+                employeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : source.getPersonalNumber());
+                return employeeEntity;
+            }
+        };
     }
 
     private Converter<StoreDto, StoreEntity> converterStoreDtoToEntity() {
