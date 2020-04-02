@@ -23,8 +23,8 @@ public class EmployeeEntity extends BindingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
-    @Column(name = "employee_binding_id")
-    private Long employeeBindingId;
+    @Column(name = "employee_id")
+    private Long employeeId;
 
     /**
      * Идентификатор Центра Финансовой Ответственности
