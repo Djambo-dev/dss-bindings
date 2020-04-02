@@ -47,7 +47,7 @@ public class ModelMapperConfig {
                 boolean isNotExistsLinkedPn = (linkedPn == null || linkedPn.isBlank());
                 String personalNumber = (isNotExistsLinkedPn) ? source.getPersonalNumber() : linkedPn;
                 employeeEntity.setPersonalNumber(personalNumber);
-                employeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : personalNumber);
+                employeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : source.getPersonalNumber());
                 return employeeEntity;
             }
         };
