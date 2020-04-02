@@ -7,7 +7,7 @@ $$
 begin
     if not exists (select constraint_name
                    from information_schema.constraint_column_usage
-                   where table_schema = t_schema  and constraint_name = c_name) then
+                   where table_schema = t_schema and constraint_name = c_name) then
         execute constraint_sql;
     end if;
 end;
