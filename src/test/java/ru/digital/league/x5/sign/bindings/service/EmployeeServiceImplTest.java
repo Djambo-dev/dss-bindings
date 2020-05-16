@@ -41,8 +41,9 @@ public class EmployeeServiceImplTest {
 
     @Before
     public void setUp() {
+        // вызов
         employeeService = new EmployeeServiceImpl(employeeRepository, modelMapper);
-
+        // проверка
         employeeInfoDto = employeeInfoDto();
         emptyEmployeeInfoDto = emptyEmployeeInfoDto();
         employeeInfoDtoWithNull = employeeInfoDtoWithNull();
@@ -50,16 +51,18 @@ public class EmployeeServiceImplTest {
 
     @Test
     public void save() {
+        // вызов
         employeeService.save(employeeInfoDto);
-
+        // проверка
         verify(employeeRepository, times(1)).deleteAllByCfoIdIn(anyList());
         verify(employeeRepository, times(1)).saveAll(anyList());
     }
 
     @Test
     public void save_emptyList() {
+        // вызов
         employeeService.save(emptyEmployeeInfoDto);
-
+        // проверка
         verify(employeeRepository, times(0)).deleteAllByCfoIdIn(anyList());
         verify(employeeRepository, times(0)).saveAll(anyList());
     }
@@ -68,7 +71,7 @@ public class EmployeeServiceImplTest {
     public void save_listWithoutNull() {
         // подготовка
         when(employeeRepository.saveAll(employeeEntityList1())).thenReturn(employeeEntityList1());
-        // тест
+        // вызов
         employeeService.save(employeeInfoDtoWithNull);
         // проверка
         verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E1007345"));
