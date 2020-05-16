@@ -9,13 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.digital.league.x5.sign.bindings.config.ModelMapperConfig;
-import ru.digital.league.x5.sign.bindings.data.TestData;
 import ru.digital.league.x5.sign.bindings.db.repository.EmployeeRepository;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
+
+import java.util.List;
 
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static ru.digital.league.x5.sign.bindings.data.TestData.employeeEntityList1;
+import static ru.digital.league.x5.sign.bindings.data.TestData.employeeInfoDto;
+import static ru.digital.league.x5.sign.bindings.data.TestData.employeeInfoDtoWithNull;
+import static ru.digital.league.x5.sign.bindings.data.TestData.emptyEmployeeInfoDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
@@ -31,13 +37,15 @@ public class EmployeeServiceImplTest {
 
     private EmployeeInfoDto employeeInfoDto;
     private EmployeeInfoDto emptyEmployeeInfoDto;
+    private EmployeeInfoDto employeeInfoDtoWithNull;
 
     @Before
     public void setUp() {
         employeeService = new EmployeeServiceImpl(employeeRepository, modelMapper);
 
-        employeeInfoDto = TestData.employeeInfoDto();
-        emptyEmployeeInfoDto = TestData.emptyEmployeeInfoDto();
+        employeeInfoDto = employeeInfoDto();
+        emptyEmployeeInfoDto = emptyEmployeeInfoDto();
+        employeeInfoDtoWithNull = employeeInfoDtoWithNull();
     }
 
     @Test
@@ -49,11 +57,22 @@ public class EmployeeServiceImplTest {
     }
 
     @Test
-    public void saveEmpty() {
+    public void save_emptyList() {
         employeeService.save(emptyEmployeeInfoDto);
 
         verify(employeeRepository, times(0)).deleteAllByCfoIdIn(anyList());
         verify(employeeRepository, times(0)).saveAll(anyList());
+    }
+
+    @Test
+    public void save_listWithoutNull() {
+        // подготовка
+        when(employeeRepository.saveAll(employeeEntityList1())).thenReturn(employeeEntityList1());
+        // тест
+        employeeService.save(employeeInfoDtoWithNull);
+        // проверка
+        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E1007345"));
+        verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
     }
 
 }

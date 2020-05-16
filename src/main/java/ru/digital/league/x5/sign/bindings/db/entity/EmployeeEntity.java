@@ -1,5 +1,6 @@
 package ru.digital.league.x5.sign.bindings.db.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
  * Запись о сотруднике
  */
 @Setter @Getter @ToString
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(schema = "bindings", name = "employee")
 @SequenceGenerator(schema = "bindings", name = "employee_seq", sequenceName = "employee_seq", allocationSize = 1)

@@ -1,5 +1,6 @@
 package ru.digital.league.x5.sign.bindings.data;
 
+import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
@@ -58,6 +59,15 @@ public class TestData {
                 .build();
     }
 
+    public static EmployeeInfoDto employeeInfoDtoWithNull() {
+
+        List<EmployeeDto> employeeBindingDtos = Arrays.asList(employeeBindingDto1(), employeeBindingDtoNull());
+
+        return EmployeeInfoDto.builder()
+                .employeeBindings(employeeBindingDtos)
+                .build();
+    }
+
     public static EmployeeInfoDto emptyEmployeeInfoDto() {
         return EmployeeInfoDto.builder()
                 .employeeBindings(Collections.emptyList())
@@ -75,6 +85,23 @@ public class TestData {
                 .build();
     }
 
+    public static List<EmployeeEntity> employeeEntityList1() {
+        EmployeeEntity ee1 = employeeEntity1();
+        return List.of(ee1);
+    }
+
+    private static EmployeeEntity employeeEntity1() {
+        EmployeeEntity ee = new EmployeeEntity();
+        ee.setCfoId("E1007345");
+        ee.setPersonalNumber("098123");
+        ee.setPersonalLogin("EKATERINA.PARUBOK");
+        ee.setPositionId(50000566L);
+        ee.setPositionName("Директор");
+        ee.setPartTimePersonalNumber("961135");
+        return ee;
+
+    }
+
     private static EmployeeDto employeeBindingDto2() {
         return EmployeeDto.builder()
                 .cfoId("E11111111")
@@ -84,4 +111,16 @@ public class TestData {
                 .positionName("Супервайзер")
                 .build();
     }
+
+    /**
+     * Специальный bean в котором все поля кроме cfoId равны нулю
+     * Такие объекты присылает MDM, записывать их в БД не имеет смысла
+     */
+    private static EmployeeDto employeeBindingDtoNull() {
+        return EmployeeDto.builder()
+                .cfoId("E222222")
+                .build();
+    }
+
+
 }
