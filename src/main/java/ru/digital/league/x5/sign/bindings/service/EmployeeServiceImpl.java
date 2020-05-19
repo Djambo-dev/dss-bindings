@@ -13,6 +13,13 @@ import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Что такое "пустые" записи?
+ * Данные о сотрудниках к нам приходят из IBM MDM. Т.к. поиск привязанных к сотруднику магазинов происходит по его ТН,
+ * то наличие ТН в записи о сотруднике обязательно, однако часть таких записей приходит с пустым полями (заполнен только
+ * cfo id). Такие записи я называю "пустыми" и до сохранения в БД они не доходят. На момент написания этого комментария
+ * таких записей было примерно 30% от общего количества.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,6 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("Saving employee bindings...: {}", employeeInfo);
         if (!CollectionUtils.isEmpty(employeeInfo.getEmployeeBindings())) {
             List<EmployeeEntity> employeeEntityList = employeeInfo.getEmployeeBindings().stream()
+                    .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем "пустые" записи
                     .map(employeeDto -> modelMapper.map(employeeDto, EmployeeEntity.class))
                     .collect(Collectors.toList());
 

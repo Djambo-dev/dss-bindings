@@ -20,6 +20,7 @@ public class EmployeeListener {
     @KafkaListener(topics = "${kafka.topic.inbox_bindings}", containerFactory = "employeeBindingKafkaListenerContainerFactory")
     public void receive(EmployeeInfoDto employeeInfo) {
         if (employeeInfo instanceof BadEmployeeInfoDto) {
+            log.error("Got {}", employeeInfo);
             return;
         }
         try {

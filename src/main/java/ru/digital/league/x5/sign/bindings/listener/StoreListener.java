@@ -20,6 +20,7 @@ public class StoreListener {
     @KafkaListener(topics = "${kafka.topic.inbox_stores}", containerFactory = "storeKafkaListenerContainerFactory")
     public void receive(StoreInfoDto storeInfo) {
         if (storeInfo instanceof BadStoreInfoDto) {
+            log.error("Got {}", storeInfo);
             return;
         }
         try {
