@@ -2,7 +2,7 @@ package ru.digital.league.x5.sign.bindings.data;
 
 import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
 
@@ -50,27 +50,27 @@ public class TestData {
                 .build();
     }
 
-    public static EmployeeInfoDto employeeInfoDto() {
+    public static EmployeeListDto employeeInfoDto() {
 
         List<EmployeeDto> employeeBindingDtos = Arrays.asList(employeeBindingDto1(), employeeBindingDto2());
 
-        return EmployeeInfoDto.builder()
-                .employeeBindings(employeeBindingDtos)
+        return EmployeeListDto.builder()
+                .employeeBindingList(employeeBindingDtos)
                 .build();
     }
 
-    public static EmployeeInfoDto employeeInfoDtoWithNull() {
+    public static EmployeeListDto employeeInfoDtoWithNull() {
 
         List<EmployeeDto> employeeBindingDtos = Arrays.asList(employeeBindingDto1(), employeeBindingDtoNull());
 
-        return EmployeeInfoDto.builder()
-                .employeeBindings(employeeBindingDtos)
+        return EmployeeListDto.builder()
+                .employeeBindingList(employeeBindingDtos)
                 .build();
     }
 
-    public static EmployeeInfoDto emptyEmployeeInfoDto() {
-        return EmployeeInfoDto.builder()
-                .employeeBindings(Collections.emptyList())
+    public static EmployeeListDto emptyEmployeeInfoDto() {
+        return EmployeeListDto.builder()
+                .employeeBindingList(Collections.emptyList())
                 .build();
     }
 

@@ -41,15 +41,17 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
-        List<StoreEntity> stores = storeRepository.findAllByPersonalNumber(personalNumber);
+        List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
+        List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
+        storeList.addAll(storeListForCluster);
 
-        List<StoreDto> storeDtos = stores.stream()
+        List<StoreDto> storeDtoList = storeList.stream()
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
                 .collect(Collectors.toList());
 
-        log.info("Stores for document service: {}", storeDtos);
+        log.info("Stores for document service: {}", storeDtoList);
 
-        return storeDtos;
+        return storeDtoList;
     }
 
     @Override

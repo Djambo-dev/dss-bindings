@@ -12,6 +12,7 @@ data:
   KAFKA_CONSUMER_GROUP_ID: "bindings-group"
   KAFKA_INBOX_BINDINGS_TOPIC: "topic-bindings"
   KAFKA_INBOX_STORES_TOPIC: "topic-stores"
+  KAFKA_CLUSTER_EMPLOYEE: "topic-cluster-employee"
   KAFKA_SSL_ENABLE: "true"
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"

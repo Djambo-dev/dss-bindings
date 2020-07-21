@@ -29,6 +29,9 @@ public class StoreEntity extends BindingEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "cluster_id")
+    private String clusterId;
+
     @Column(name = "open_date")
     private LocalDate openDate;
 
