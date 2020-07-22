@@ -41,8 +41,14 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
+        long begin = System.currentTimeMillis();
         List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
+        log.info("Binding by employee table ={}", System.currentTimeMillis() - begin);
+
+        begin = System.currentTimeMillis();
         List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
+        log.info("Binding by cluster employee table ={}", System.currentTimeMillis() - begin);
+
         storeList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
 
         List<StoreDto> storeDtoList = storeList.stream()
