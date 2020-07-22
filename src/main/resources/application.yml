@@ -35,6 +35,7 @@ kafka:
   topic:
     inbox_stores: ${KAFKA_INBOX_STORES_TOPIC}
     inbox_bindings: ${KAFKA_INBOX_BINDINGS_TOPIC}
+    cluster_employee: ${KAFKA_CLUSTER_EMPLOYEE}
   ssl:
     enable: ${KAFKA_SSL_ENABLE:false}
     key-store-path: ${KAFKA_KEY_STORE_PATH}

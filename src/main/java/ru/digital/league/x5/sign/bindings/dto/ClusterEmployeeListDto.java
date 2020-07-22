@@ -14,11 +14,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeInfoDto {
+public class ClusterEmployeeListDto {
 
-    /**
-     * Данные привязок сотрудников
-     */
-    private List<EmployeeDto> employeeBindings;
+    private List<ClusterEmployeeDto> clusterEmployeeBindingList;
 
 }

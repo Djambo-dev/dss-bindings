@@ -37,6 +37,11 @@ public class StoreDto {
     private String address;
 
     /**
+     * Код кластера
+     */
+    private String clusterId;
+
+    /**
      * Дата открытия магазина
      */
     private LocalDate openDate;

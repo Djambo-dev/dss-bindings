@@ -8,9 +8,11 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
+import ru.digital.league.x5.sign.bindings.db.entity.ClusterEmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.key.StoreKey;
+import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 
@@ -28,6 +30,7 @@ public class ModelMapperConfig {
         mapper.addConverter(converterStoreDtoToEntity());
         mapper.addConverter(converterStoreEntityToDto());
         mapper.addConverter(converterEmployeeDtoToEntity());
+        mapper.addConverter(converterClusterEmployeeDtoToEntity());
 
         return mapper;
     }
@@ -53,6 +56,30 @@ public class ModelMapperConfig {
         };
     }
 
+    private Converter<ClusterEmployeeDto, ClusterEmployeeEntity> converterClusterEmployeeDtoToEntity() {
+        return new Converter<>() {
+            @Override
+            public ClusterEmployeeEntity convert(MappingContext<ClusterEmployeeDto, ClusterEmployeeEntity> context) {
+                ClusterEmployeeDto source = context.getSource();
+                Assert.notNull(source, "Object of convert is missing");
+                ClusterEmployeeEntity clusterEmployeeEntity = new ClusterEmployeeEntity();
+                clusterEmployeeEntity.setClusterId(source.getClusterId());
+                clusterEmployeeEntity.setPositionId(source.getPositionId());
+                clusterEmployeeEntity.setPositionName(source.getPositionName());
+                clusterEmployeeEntity.setPersonalLogin(source.getPersonalLogin());
+                String linkedPn = source.getLinkedPersonalNumber();
+                boolean isNotExistsLinkedPn = (linkedPn == null || linkedPn.isBlank());
+                String personalNumber = (isNotExistsLinkedPn) ? source.getPersonalNumber() : linkedPn;
+                clusterEmployeeEntity.setPersonalNumber(personalNumber);
+                clusterEmployeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : source.getPersonalNumber());
+                clusterEmployeeEntity.setFullName(source.getFullName());
+                clusterEmployeeEntity.setRole(source.getRole());
+                clusterEmployeeEntity.setEmail(source.getEmail());
+                return clusterEmployeeEntity;
+            }
+        };
+    }
+
     private Converter<StoreDto, StoreEntity> converterStoreDtoToEntity() {
         return new Converter<>() {
             @Override
@@ -66,6 +93,7 @@ public class ModelMapperConfig {
                 storeEntity.setOpenDate(source.getOpenDate());
                 storeEntity.setCloseDate(source.getCloseDate());
                 storeEntity.setStoreKey(storeKey);
+                storeEntity.setClusterId(source.getClusterId());
                 return storeEntity;
             }
         };
@@ -84,6 +112,7 @@ public class ModelMapperConfig {
                 storeDto.setCloseDate(source.getCloseDate());
                 storeDto.setMdmStoreId(source.getStoreKey().getMdmStoreId());
                 storeDto.setCfoId(source.getStoreKey().getCfoId());
+                storeDto.setClusterId(source.getClusterId());
                 return storeDto;
             }
         };

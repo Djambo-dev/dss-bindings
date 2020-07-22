@@ -29,11 +29,29 @@ public class StoreEntity extends BindingEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "cluster_id")
+    private String clusterId;
+
     @Column(name = "open_date")
     private LocalDate openDate;
 
     @Column(name = "close_date")
     private LocalDate closeDate;
 
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        StoreEntity se = (StoreEntity) obj;
+        if (this.getStoreKey() == null || se.getStoreKey() == null) {
+            return false;
+        }
+
+        return this.getStoreKey().getCfoId().equals(se.getStoreKey().getCfoId()) &&
+                this.getStoreKey().getMdmStoreId().equals(se.getStoreKey().getMdmStoreId());
+    }
 }
 
