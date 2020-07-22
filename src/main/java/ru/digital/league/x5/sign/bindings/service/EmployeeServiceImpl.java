@@ -34,7 +34,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("Saving employee bindings...: {}", employeeInfo);
         if (!CollectionUtils.isEmpty(employeeInfo.getEmployeeBindingList())) {
             List<EmployeeEntity> employeeEntityList = employeeInfo.getEmployeeBindingList().stream()
-                    .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем "пустые" записи
+                    .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем null записи
+                    .filter(employeeDto -> !employeeDto.getPersonalNumber().isEmpty()) // фильтруем "пустые" записи
                     .map(employeeDto -> modelMapper.map(employeeDto, EmployeeEntity.class))
                     .collect(Collectors.toList());
 

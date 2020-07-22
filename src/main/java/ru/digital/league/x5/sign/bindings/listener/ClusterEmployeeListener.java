@@ -17,7 +17,7 @@ public class ClusterEmployeeListener {
     private final ClusterEmployeeService clusterEmployeeService;
     private final MessageService messageService;
 
-    @KafkaListener(topics = "${kafka.topic.cluster_employee}", containerFactory = "`clusterEmployeeBindingKafkaListenerContainerFactory`")
+    @KafkaListener(topics = "${kafka.topic.cluster_employee}", containerFactory = "clusterEmployeeBindingKafkaListenerContainerFactory")
     public void receive(ClusterEmployeeListDto clusterEmployeeList) {
         if (clusterEmployeeList instanceof BadClusterEmployeeListDto) {
             BadClusterEmployeeListDto badObject = (BadClusterEmployeeListDto) clusterEmployeeList;

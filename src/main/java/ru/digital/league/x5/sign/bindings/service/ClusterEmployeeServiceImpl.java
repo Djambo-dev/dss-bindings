@@ -38,7 +38,8 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
         log.info("Saving cluster employee bindings...: {}", clusterEmployeeListDto);
         if (!CollectionUtils.isEmpty(clusterEmployeeListDto.getClusterEmployeeBindingList())) {
             List<ClusterEmployeeEntity> employeeEntityList = clusterEmployeeListDto.getClusterEmployeeBindingList().stream()
-                    .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем "пустые" записи
+                    .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем null записи
+                    .filter(employeeDto -> !employeeDto.getPersonalNumber().isEmpty()) // фильтруем "пустые" записи
                     .filter(employeeDto -> ROLE_NOO.equals(employeeDto.getRole())) // оставляем только сотрудников с ролью НОО
                     .map(employeeDto -> modelMapper.map(employeeDto, ClusterEmployeeEntity.class))
                     .collect(Collectors.toList());
