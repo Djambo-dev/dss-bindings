@@ -75,20 +75,24 @@ public class StoreServiceImplTest {
 
     /**
      * Проверяем запрос на поиск магазинов по табельному номеру
-     * 1 магазин найден
+     * 2 магазина найдено
      */
     @Test
     public void getStoresByPersonalNumber() {
+        System.out.println("getStoresByPersonalNumber");
         // подготовка
         List<StoreEntity> storeEntities = List.of(modelMapper.map(TestData.storeDto1(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(TestData.storeDto2(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
+        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
 
         //вызов
         List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
 
         //проверка
         verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
-        assertEquals(List.of(TestData.storeDto1()), storesByPersonalNumber);
+        verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
+        assertEquals(List.of(TestData.storeDto1(), TestData.storeDto2()), storesByPersonalNumber);
 
     }
 

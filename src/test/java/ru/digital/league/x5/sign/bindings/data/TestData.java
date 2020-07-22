@@ -33,6 +33,7 @@ public class TestData {
                 .mdmStoreId("3402")
                 .name("4467-Пятерочка.")
                 .cfoId("E1007345")
+                .clusterId("9999")
                 .address("184510, Мурманская обл, Мончегорск г, Бредова ул, 30")
                 .openDate(LocalDate.of(2014, 7, 7))
                 .closeDate(null)
@@ -44,6 +45,7 @@ public class TestData {
                 .mdmStoreId("1111")
                 .name("1111-Пятерочка.")
                 .cfoId("E11111111")
+                .clusterId("8888")
                 .address("111111, Москва г, Никольская ул, 1")
                 .openDate(LocalDate.of(2011, 1, 1))
                 .closeDate(null)
@@ -99,7 +101,6 @@ public class TestData {
         ee.setPositionName("Директор");
         ee.setPartTimePersonalNumber("961135");
         return ee;
-
     }
 
     private static EmployeeDto employeeBindingDto2() {
