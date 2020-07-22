@@ -43,7 +43,7 @@ public class StoreServiceImpl implements StoreService {
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
         List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
         List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
-        storeList.addAll(storeListForCluster);
+        storeList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
 
         List<StoreDto> storeDtoList = storeList.stream()
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))

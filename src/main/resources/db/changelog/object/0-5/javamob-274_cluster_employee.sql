@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeSet St.Yakovlev:javamob-274 logicalFilePath:db/changelog/object/0-5/javamob-274_cluster_employee.sql
+--changeSet St.Yakovlev:javamob-274_cluster_employee logicalFilePath:db/changelog/object/0-5/javamob-274_cluster_employee.sql
 CREATE TABLE IF NOT EXISTS bindings.cluster_employee
 (
     employee_id         BIGINT,
