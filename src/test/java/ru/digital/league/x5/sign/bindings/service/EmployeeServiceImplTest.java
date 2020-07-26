@@ -18,10 +18,10 @@ import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ru.digital.league.x5.sign.bindings.data.TestData.employeeEntityList1;
-import static ru.digital.league.x5.sign.bindings.data.TestData.employeeInfoDto;
-import static ru.digital.league.x5.sign.bindings.data.TestData.employeeInfoDtoWithNull;
-import static ru.digital.league.x5.sign.bindings.data.TestData.emptyEmployeeInfoDto;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeInfoDto;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeInfoDtoWithNull;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.emptyEmployeeInfoDto;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
@@ -41,9 +41,9 @@ public class EmployeeServiceImplTest {
 
     @Before
     public void setUp() {
-        // вызов
+
         employeeService = new EmployeeServiceImpl(employeeRepository, modelMapper);
-        // проверка
+
         employeeListDto = employeeInfoDto();
         emptyEmployeeListDto = emptyEmployeeInfoDto();
         employeeListDtoWithNull = employeeInfoDtoWithNull();

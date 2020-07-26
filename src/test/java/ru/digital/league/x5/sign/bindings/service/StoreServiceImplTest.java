@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.digital.league.x5.sign.bindings.config.ModelMapperConfig;
-import ru.digital.league.x5.sign.bindings.data.TestData;
+import ru.digital.league.x5.sign.bindings.data.StoreData;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
@@ -50,9 +50,9 @@ public class StoreServiceImplTest {
     @Before
     public void setUp() {
         storeService = new StoreServiceImpl(storeRepository, modelMapper);
-        storeInfoDto = TestData.storeInfoDto();
-        emptyStoreInfoDto = TestData.emptyStoreInfoDto();
-        storeDtos = Arrays.asList(TestData.storeDto1(), TestData.storeDto2());
+        storeInfoDto = StoreData.storeInfoDto();
+        emptyStoreInfoDto = StoreData.emptyStoreInfoDto();
+        storeDtos = Arrays.asList(StoreData.storeDto1(), StoreData.storeDto2());
     }
 
     /**
@@ -60,7 +60,10 @@ public class StoreServiceImplTest {
      */
     @Test
     public void saveStore_success() {
+        //вызов
         storeService.save(storeInfoDto);
+
+        //проверка
         verify(storeRepository, times(1)).saveAll(anyList());
     }
 
@@ -69,22 +72,24 @@ public class StoreServiceImplTest {
      */
     @Test
     public void saveStore_emptyList() {
+        //вызов
         storeService.save(emptyStoreInfoDto);
+
+        //проверка
         verify(storeRepository, times(0)).saveAll(anyList());
     }
 
     /**
-     * Проверяем запрос на поиск магазинов по табельному номеру
-     * 2 магазина найдено
+     * Проверяем запрос на поиск магазинов по табельному номеру (обычный сотрудник)
+     * 1 магазин найден
      */
     @Test
     public void getStoresByPersonalNumber() {
         System.out.println("getStoresByPersonalNumber");
         // подготовка
-        List<StoreEntity> storeEntities = List.of(modelMapper.map(TestData.storeDto1(), StoreEntity.class));
-        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(TestData.storeDto2(), StoreEntity.class));
+        List<StoreEntity> storeEntities = List.of(modelMapper.map(StoreData.storeDto1(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
-        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
+        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
 
         //вызов
         List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
@@ -92,12 +97,12 @@ public class StoreServiceImplTest {
         //проверка
         verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
         verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
-        assertEquals(List.of(TestData.storeDto1(), TestData.storeDto2()), storesByPersonalNumber);
+        assertEquals(List.of(StoreData.storeDto1()), storesByPersonalNumber);
 
     }
 
     /**
-     * Проверяем запрос на поиск магазинов по табельному номеру
+     * Проверяем запрос на поиск магазинов по табельному номеру (обычный сотрудник)
      * 2 магазина найдено
      */
     @Test
@@ -143,7 +148,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoreByStoreId_success() {
         // подготовка
-        StoreEntity storeEntity = modelMapper.map(TestData.storeDto1(), StoreEntity.class);
+        StoreEntity storeEntity = modelMapper.map(StoreData.storeDto1(), StoreEntity.class);
         when(storeRepository.findByStoreKeyMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
 
         //вызов
@@ -151,7 +156,7 @@ public class StoreServiceImplTest {
 
         //проверка
         verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
-        assertEquals(TestData.storeDto1(), storeByStoreId);
+        assertEquals(StoreData.storeDto1(), storeByStoreId);
     }
 
     /**
@@ -170,4 +175,71 @@ public class StoreServiceImplTest {
         verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
         assertNull(storeByStoreId);
     }
+
+    /**
+     * Проверяем запрос на поиск магазинов по табельному номеру (НОО)
+     * 1 магазин найден
+     */
+    @Test
+    public void getStoresByPersonalNumber_NOO_oneStore() {
+        // подготовка
+        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.storeDto2(), StoreEntity.class));
+        when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
+        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
+
+        //вызов
+        List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
+
+        //проверка
+        verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
+        verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
+        assertEquals(List.of(StoreData.storeDto2()), storesByPersonalNumber);
+
+    }
+
+    /**
+     * Проверяем запрос на поиск магазинов по табельному номеру (НОО)
+     * 2 магазина найдено
+     */
+    @Test
+    public void getStoresByPersonalNumber_NOO_twoStores() {
+        // подготовка
+        List<StoreEntity> storeEntities = storeDtos.stream()
+                .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
+                .collect(Collectors.toList());
+        when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
+        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntities);
+
+        //вызов
+        List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
+
+        //проверка
+        verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
+        verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
+        assertEquals(storeDtos, storesByPersonalNumber);
+
+    }
+
+    /**
+     * Проверяем запрос на поиск магазинов по табельному номеру (НОО+совместитель )
+     * 2 магазина найдено
+     */
+    @Test
+    public void getStoresByPersonalNumber_NOOandDM_twoStores() {
+        // подготовка
+        List<StoreEntity> storeEntities = List.of(modelMapper.map(StoreData.storeDto1(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.storeDto2(), StoreEntity.class));
+        when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
+        when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
+
+        //вызов
+        List<StoreDto> storesByPersonalNumber = storeService.getStoresByPersonalNumber(personalNumber);
+
+        //проверка
+        verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
+        verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
+        assertEquals(List.of(StoreData.storeDto1(), StoreData.storeDto2()), storesByPersonalNumber);
+
+    }
+
 }

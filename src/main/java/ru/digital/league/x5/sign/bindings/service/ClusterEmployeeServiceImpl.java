@@ -44,14 +44,19 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                     .map(employeeDto -> modelMapper.map(employeeDto, ClusterEmployeeEntity.class))
                     .collect(Collectors.toList());
 
-            List<String> clusterIdList = employeeEntityList.stream()
-                    .map(ClusterEmployeeEntity::getClusterId)
-                    .distinct()
-                    .collect(Collectors.toList());
-            clusterEmployeeRepository.deleteAllByClusterIdIn(clusterIdList);
-            log.info("Deleted existing cluster employee ...: {}", clusterIdList);
-            employeeEntityList = clusterEmployeeRepository.saveAll(employeeEntityList);
-            log.info("Saved employee {} to DB", employeeEntityList);
+            if (employeeEntityList.size() > 0) { // пропускаем если список сотрудников кластера пустой
+                List<String> clusterIdList = employeeEntityList.stream()
+                        .map(ClusterEmployeeEntity::getClusterId)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+                clusterEmployeeRepository.deleteAllByClusterIdIn(clusterIdList);
+                log.info("Deleted existing cluster employee ...: {}", clusterIdList);
+
+                employeeEntityList = clusterEmployeeRepository.saveAll(employeeEntityList);
+                log.info("Saved employee {} to DB", employeeEntityList);
+            }
+
         }
     }
 }
