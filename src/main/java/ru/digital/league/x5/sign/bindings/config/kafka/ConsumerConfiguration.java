@@ -17,9 +17,11 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.AlwaysRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
-import ru.digital.league.x5.sign.bindings.dto.bad.BadEmployeeInfoDto;
+import ru.digital.league.x5.sign.bindings.dto.bad.BadClusterEmployeeListDto;
+import ru.digital.league.x5.sign.bindings.dto.bad.BadEmployeeListDto;
 import ru.digital.league.x5.sign.bindings.dto.bad.BadStoreInfoDto;
 
 import java.util.HashMap;
@@ -59,13 +61,23 @@ public class ConsumerConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<String, EmployeeInfoDto> employeeBindingKafkaConsumerFactory() {
-        return declareConsumerFactory(EmployeeInfoDto.class, bootstrapServers, groupId, new BadEmployeeInfoDto());
+    public ConsumerFactory<String, EmployeeListDto> employeeBindingKafkaConsumerFactory() {
+        return declareConsumerFactory(EmployeeListDto.class, bootstrapServers, groupId, new BadEmployeeListDto());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EmployeeInfoDto> employeeBindingKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, EmployeeListDto> employeeBindingKafkaListenerContainerFactory() {
         return declareListenerContainerFactory(employeeBindingKafkaConsumerFactory());
+    }
+
+    @Bean
+    public ConsumerFactory<String, ClusterEmployeeListDto> clusterEmployeeBindingKafkaConsumerFactory() {
+        return declareConsumerFactory(ClusterEmployeeListDto.class, bootstrapServers, groupId, new BadClusterEmployeeListDto());
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ClusterEmployeeListDto> clusterEmployeeBindingKafkaListenerContainerFactory() {
+        return declareListenerContainerFactory(clusterEmployeeBindingKafkaConsumerFactory());
     }
 
     private <T> ConcurrentKafkaListenerContainerFactory<String, T> declareListenerContainerFactory(ConsumerFactory<String, T> consumerFactory) {

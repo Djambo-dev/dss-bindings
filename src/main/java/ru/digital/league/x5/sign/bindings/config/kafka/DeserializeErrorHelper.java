@@ -24,11 +24,9 @@ public class DeserializeErrorHelper {
                 byte[] exceptionBytes = errorHeader.value();
                 ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Objects.requireNonNull(exceptionBytes)));
                 DeserializationException dex = (DeserializationException) ois.readObject();
-                log.error("Error deserialize message from kafka. {}", dex.getMessage());
-                log.debug("Detail: {}", dex.getMessage());
+                log.error("Error deserialize message from kafka. {} {}", dex.getMessage(), new String(dex.getData()));
             } catch (Exception exception) {
-                log.error("Error deserialize handle function. {}", exception.getMessage());
-                log.debug("Detail: {}", exception);
+                log.error("Error deserialize handle function", exception);
             }
             return badDtoInstance;
         };

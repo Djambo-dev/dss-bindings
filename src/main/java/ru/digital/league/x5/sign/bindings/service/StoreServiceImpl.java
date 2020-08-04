@@ -11,6 +11,7 @@ import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,15 +42,25 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
-        List<StoreEntity> stores = storeRepository.findAllByPersonalNumber(personalNumber);
+        long begin = System.currentTimeMillis();
+        List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
+        log.info("Binding by employee table ={}", System.currentTimeMillis() - begin);
 
-        List<StoreDto> storeDtos = stores.stream()
+        begin = System.currentTimeMillis();
+        List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
+        log.info("Binding by cluster employee table ={}", System.currentTimeMillis() - begin);
+
+        List<StoreEntity> unionStoreEntityList = new LinkedList<>();
+        unionStoreEntityList.addAll(storeList);
+        unionStoreEntityList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
+
+        List<StoreDto> storeDtoList = unionStoreEntityList.stream()
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
                 .collect(Collectors.toList());
 
-        log.info("Stores for document service: {}", storeDtos);
+        log.info("Stores for document service: {}", storeDtoList);
 
-        return storeDtos;
+        return storeDtoList;
     }
 
     @Override

@@ -8,7 +8,15 @@ import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CustomAccessTokenConverter extends DefaultAccessTokenConverter  {
 
@@ -18,7 +26,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter  {
 
 	@Override
 	public OAuth2Authentication extractAuthentication(Map<String, ?> map) {
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		Set<String> scope = extractScope(map);
 		Authentication user = new DefaultUserAuthenticationConverter().extractAuthentication(map);
 		String clientId = (String) map.get(CLIENT_ID);
@@ -26,8 +34,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter  {
 		if (includeGrantType && map.containsKey(GRANT_TYPE)) {
 			parameters.put(GRANT_TYPE, (String) map.get(GRANT_TYPE));
 		}
-		Set<String> resourceIds = new LinkedHashSet<String>(map.containsKey(AUD) ? getAudience(map)
-																				 : Collections.<String>emptySet());
+		Set<String> resourceIds = new LinkedHashSet<>(map.containsKey(AUD) ? getAudience(map) : Collections.emptySet());
 
 		Collection<? extends GrantedAuthority> authorities = null;
 		if (user == null) {
@@ -61,11 +68,11 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter  {
 		if (map.containsKey(SCOPE)) {
 			Object scopeObj = map.get(SCOPE);
 			if (String.class.isInstance(scopeObj)) {
-				scope = new LinkedHashSet<String>(Arrays.asList(String.class.cast(scopeObj).split(" ")));
+				scope = new LinkedHashSet<>(Arrays.asList(String.class.cast(scopeObj).split(" ")));
 			} else if (Collection.class.isAssignableFrom(scopeObj.getClass())) {
 				@SuppressWarnings("unchecked")
 				Collection<String> scopeColl = (Collection<String>) scopeObj;
-				scope = new LinkedHashSet<String>(scopeColl);	// Preserve ordering
+				scope = new LinkedHashSet<>(scopeColl);	// Preserve ordering
 			}
 		}
 		return scope;
