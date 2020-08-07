@@ -54,8 +54,8 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                 log.info("Deleted existing cluster employee ...: {}", clusterIdList);
 
                 employeeEntityList = clusterEmployeeRepository.saveAll(employeeEntityList);
-                log.info("Saved employee {} to DB", employeeEntityList);
             }
+            log.info("Saved cluster employee {} to DB", employeeEntityList);
 
         }
     }
