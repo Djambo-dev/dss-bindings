@@ -25,7 +25,7 @@ public class ClusterEmployeeListener {
             return;
         }
         try {
-            log.info("Got employeeInfo {} from Kafka", clusterEmployeeList);
+            log.info("Got cluster employee {} from Kafka", clusterEmployeeList);
             clusterEmployeeService.save(clusterEmployeeList);
         } catch (Exception exception) {
             throw new RuntimeException(messageService.getMessage("exception.binding.save"));
