@@ -19,15 +19,11 @@ import java.util.stream.Collectors;
  * то наличие ТН в записи о сотруднике обязательно, однако часть таких записей приходит с пустым полями (заполнен только
  * cfo id). Такие записи я называю "пустыми" и до сохранения в БД они не доходят. На момент написания этого комментария
  * таких записей было примерно 30% от общего количества.
- *
- * НОО=Начальник отдела операций
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
-
-    private static final String ROLE_NOO = "Начальник отдела операций";
 
     private final ClusterEmployeeRepository clusterEmployeeRepository;
     private final ModelMapper modelMapper;
@@ -40,7 +36,6 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
             List<ClusterEmployeeEntity> employeeEntityList = clusterEmployeeListDto.getClusterEmployeeBindingList().stream()
                     .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем null записи
                     .filter(employeeDto -> !employeeDto.getPersonalNumber().isEmpty()) // фильтруем "пустые" записи
-                    .filter(employeeDto -> ROLE_NOO.equals(employeeDto.getRole())) // оставляем только сотрудников с ролью НОО
                     .map(employeeDto -> modelMapper.map(employeeDto, ClusterEmployeeEntity.class))
                     .collect(Collectors.toList());
 
