@@ -34,6 +34,10 @@ public class StoreServiceImplTest {
 
     @Mock
     private StoreRepository storeRepository;
+    @Mock
+    private EmployeeService employeeService;
+    @Mock
+    private ClusterEmployeeService clusterEmployeeService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -46,10 +50,11 @@ public class StoreServiceImplTest {
 
     private String personalNumber = "111";
     private String mdmStoreId = "3402";
+    private List<Long> positionId = List.of(50_000_741L);
 
     @Before
     public void setUp() {
-        storeService = new StoreServiceImpl(storeRepository, modelMapper);
+        storeService = new StoreServiceImpl(storeRepository,  clusterEmployeeService, employeeService, modelMapper, positionId);
         storeInfoDto = StoreData.storeInfoDto();
         emptyStoreInfoDto = StoreData.emptyStoreInfoDto();
         storeDtos = Arrays.asList(StoreData.storeDto1(), StoreData.storeDto2());

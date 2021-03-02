@@ -92,16 +92,14 @@ public class StoreServiceImpl implements StoreService {
     private List<StoreEntity> getStoreByPersonalNumberAndPositionId(String personalNumber, boolean isCluster) {
         if (isCluster) {
             ClusterEmployeeDto clusterEmployeeDto = clusterEmployeeService.get(personalNumber);
-            if (clusterEmployeeDto.getPositionId() != null &&
-                    positionId.contains(clusterEmployeeDto.getPositionId().intValue())) {
+            if (clusterEmployeeDto != null && positionId.contains(clusterEmployeeDto.getPositionId().intValue())) {
                 return storeRepository.findAllWithClosedShopByClusterPersonalNumber(personalNumber);
             } else {
                 return storeRepository.findAllByClusterPersonalNumber(personalNumber);
             }
         } else {
             EmployeeDto employeeDto = employeeService.get(personalNumber);
-            if (employeeDto.getPositionId() != null &&
-                    positionId.contains(employeeDto.getPositionId().intValue())) {
+            if (employeeDto != null && positionId.contains(employeeDto.getPositionId().intValue())) {
                 return storeRepository.findAllWithClosedShopByPersonalNumber(personalNumber);
             } else {
                 return storeRepository.findAllByPersonalNumber(personalNumber);

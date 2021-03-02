@@ -54,6 +54,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto get(String personalNumber) {
         EmployeeEntity employeeEntity = employeeRepository.getByPersonalNumber(personalNumber);
-        return modelMapper.map(employeeEntity != null ? employeeEntity : new EmployeeEntity(), EmployeeDto.class);
+        return employeeEntity != null ? modelMapper.map(employeeEntity , EmployeeDto.class) : null;
     }
 }

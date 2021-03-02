@@ -59,6 +59,6 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
     @Override
     public ClusterEmployeeDto get(String personalNumber) {
         ClusterEmployeeEntity clusterEmployee = clusterEmployeeRepository.getByPersonalNumber(personalNumber);
-        return modelMapper.map(clusterEmployee != null ? clusterEmployee : new ClusterEmployeeDto(), ClusterEmployeeDto.class);
+        return clusterEmployee != null ? modelMapper.map(clusterEmployee, ClusterEmployeeDto.class) : null;
     }
 }
