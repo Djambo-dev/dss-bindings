@@ -9,4 +9,6 @@ public interface ClusterEmployeeRepository extends JpaRepository<ClusterEmployee
 
     void deleteAllByClusterIdIn(List<String> clusterIdList);
 
+    ClusterEmployeeEntity getByPersonalNumber(String personalNumber);
+
 }

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
+import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
+import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
 
@@ -21,7 +23,10 @@ import java.util.stream.Collectors;
 public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
+    private final ClusterEmployeeService clusterEmployeeService;
+    private final EmployeeService employeeService;
     private final ModelMapper modelMapper;
+    private final List<Long> positionId;
 
     /**
      * Алгоритм обновления/добавления магазина - когда приходит запись о магазине - мы обновляем эту запись по
@@ -43,11 +48,11 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
         long begin = System.currentTimeMillis();
-        List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
+        List<StoreEntity> storeList = getStoreByPersonalNumberAndPositionId(personalNumber, false);
         log.info("Binding by employee table ={}", System.currentTimeMillis() - begin);
 
         begin = System.currentTimeMillis();
-        List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
+        List<StoreEntity> storeListForCluster = getStoreByPersonalNumberAndPositionId(personalNumber, true);
         log.info("Binding by cluster employee table ={}", System.currentTimeMillis() - begin);
 
         List<StoreEntity> unionStoreEntityList = new LinkedList<>();
@@ -73,5 +78,34 @@ public class StoreServiceImpl implements StoreService {
         StoreDto storeDto = modelMapper.map(storeEntity, StoreDto.class);
         log.debug("Found store {} by store id {}", storeDto, storeId);
         return storeDto;
+    }
+
+    /**
+     * Вспомогательный метод для выбора привязок магазинов сотрудника (с обычной ролью или ролью в кластере)
+     * по персональному номеру
+     *
+     * @param personalNumber  персональный номер сотрудника
+     * @param isCluster       булева переменная принадлежности сотрудника к кластеру
+     *
+     * */
+
+    private List<StoreEntity> getStoreByPersonalNumberAndPositionId(String personalNumber, boolean isCluster) {
+        if (isCluster) {
+            ClusterEmployeeDto clusterEmployeeDto = clusterEmployeeService.get(personalNumber);
+            if (clusterEmployeeDto.getPositionId() != null &&
+                    positionId.contains(clusterEmployeeDto.getPositionId().intValue())) {
+                return storeRepository.findAllWithClosedShopByClusterPersonalNumber(personalNumber);
+            } else {
+                return storeRepository.findAllByClusterPersonalNumber(personalNumber);
+            }
+        } else {
+            EmployeeDto employeeDto = employeeService.get(personalNumber);
+            if (employeeDto.getPositionId() != null &&
+                    positionId.contains(employeeDto.getPositionId().intValue())) {
+                return storeRepository.findAllWithClosedShopByPersonalNumber(personalNumber);
+            } else {
+                return storeRepository.findAllByPersonalNumber(personalNumber);
+            }
+        }
     }
 }

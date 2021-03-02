@@ -9,4 +9,6 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
 
     void deleteAllByCfoIdIn(List<String> cfoIds);
 
+    EmployeeEntity getByPersonalNumber(String personalNumber);
+
 }

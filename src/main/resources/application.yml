@@ -57,3 +57,9 @@ security:
       jwt:
         key-value: ${PUBLIC_KEYCLOAK_KEY:-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqIqaePXrGqr6x9ndLworFfhRtgxyIhrxKDs1/0uraFyoJrWYR9jMaB/D3l0JjL4Gj5tMsc+zY35DjATDGih4GGIZgVktutCaawn8BvYV3WpyWQCE3VUysuL6gvDRR8BWQ/A8yS8P6iyImS/X3kVJRM+NnCAHdHrI3usgPY4wlP0IFflvJRuZKHDD5EpTz3HSltBer9Q0OBwX4K1eCKPFPsp/aEaNee9SBn1vktAZ6S5ZDyx2jkR6RNjAr57cY9AUqWVfg6WIeeDUcbn6q3B7SSmjVCEGob8sltPPZsertDx6FYoU0Mr+Sb/4+IBFOdubJ5gOxiFNSMvJmdjUX51vkwIDAQAB-----END PUBLIC KEY-----}
 
+user:
+  positionId:
+    - 50000741  # Супервайзер
+    - 52036727  # Супервайзер ТС5
+    - 50000686  # Региональный директор
+    - 50338473  # Региональный директор формата супермаркет
