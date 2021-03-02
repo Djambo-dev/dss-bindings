@@ -16,10 +16,10 @@ import java.util.List;
 public class ApplicationConfig {
     //TODO web client, ssl etc.
 
-    private List<Long> positionId = new ArrayList<>();
+    private List<String> positionId = new ArrayList<>();
 
     @Bean
-    public List<Long> getPositionId(){
+    public List<String> getPositionId(){
         return this.positionId;
     }
 }

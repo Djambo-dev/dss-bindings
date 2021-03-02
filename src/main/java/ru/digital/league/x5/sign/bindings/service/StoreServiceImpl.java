@@ -3,6 +3,7 @@ package ru.digital.league.x5.sign.bindings.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,11 +23,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StoreServiceImpl implements StoreService {
 
+    @Value("${interval.days}")
+    private Integer intervalDays;
+
     private final StoreRepository storeRepository;
     private final ClusterEmployeeService clusterEmployeeService;
     private final EmployeeService employeeService;
     private final ModelMapper modelMapper;
-    private final List<Long> positionId;
+    private final List<String> positionId;
 
     /**
      * Алгоритм обновления/добавления магазина - когда приходит запись о магазине - мы обновляем эту запись по
@@ -92,15 +96,15 @@ public class StoreServiceImpl implements StoreService {
     private List<StoreEntity> getStoreByPersonalNumberAndPositionId(String personalNumber, boolean isCluster) {
         if (isCluster) {
             ClusterEmployeeDto clusterEmployeeDto = clusterEmployeeService.get(personalNumber);
-            if (clusterEmployeeDto != null && positionId.contains(clusterEmployeeDto.getPositionId().intValue())) {
-                return storeRepository.findAllWithClosedShopByClusterPersonalNumber(personalNumber);
+            if (clusterEmployeeDto != null && positionId.contains(clusterEmployeeDto.getPositionId().toString())) {
+                return storeRepository.findAllWithClosedShopByClusterPersonalNumber(personalNumber, intervalDays);
             } else {
                 return storeRepository.findAllByClusterPersonalNumber(personalNumber);
             }
         } else {
             EmployeeDto employeeDto = employeeService.get(personalNumber);
-            if (employeeDto != null && positionId.contains(employeeDto.getPositionId().intValue())) {
-                return storeRepository.findAllWithClosedShopByPersonalNumber(personalNumber);
+            if (employeeDto != null && positionId.contains(employeeDto.getPositionId().toString())) {
+                return storeRepository.findAllWithClosedShopByPersonalNumber(personalNumber, intervalDays);
             } else {
                 return storeRepository.findAllByPersonalNumber(personalNumber);
             }
