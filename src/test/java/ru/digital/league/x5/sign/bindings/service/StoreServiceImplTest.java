@@ -50,7 +50,7 @@ public class StoreServiceImplTest {
 
     private String personalNumber = "111";
     private String mdmStoreId = "3402";
-    private List<Long> positionId = List.of(50_000_741L);
+    private List<String> positionId = List.of("50000741");
 
     @Before
     public void setUp() {
