@@ -39,6 +39,8 @@ public class StoreServiceImplTest {
     private ModelMapper modelMapper;
 
     private StoreService storeService;
+    private EmployeeService employeeService;
+    private ClusterEmployeeService clusterEmployeeService;
 
     private StoreInfoDto storeInfoDto;
     private StoreInfoDto emptyStoreInfoDto;
@@ -46,10 +48,11 @@ public class StoreServiceImplTest {
 
     private String personalNumber = "111";
     private String mdmStoreId = "3402";
+    private List<Long> positionId = List.of(50_000_741L);
 
     @Before
     public void setUp() {
-        storeService = new StoreServiceImpl(storeRepository, modelMapper);
+        storeService = new StoreServiceImpl(storeRepository, clusterEmployeeService, employeeService, modelMapper, positionId);
         storeInfoDto = StoreData.storeInfoDto();
         emptyStoreInfoDto = StoreData.emptyStoreInfoDto();
         storeDtos = Arrays.asList(StoreData.storeDto1(), StoreData.storeDto2());
