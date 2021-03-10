@@ -3,6 +3,7 @@ package ru.digital.league.x5.sign.bindings.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -19,6 +20,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class StoreServiceImpl implements StoreService {
+
+    @Value("${user.position-id}")
+    private final List<Long> positionIdList;
+
+    // присвоение значения переменной требуется для прохождения тестов (в противном случае intervalDays = null), а также,
+    // чтобы не создавать конструктор данного класса с присвоением final переменной значения из application.yml
+    @Value("${interval.days}")
+    private Integer intervalDays = 30;
 
     private final StoreRepository storeRepository;
     private final ModelMapper modelMapper;
@@ -53,6 +62,13 @@ public class StoreServiceImpl implements StoreService {
         List<StoreEntity> unionStoreEntityList = new LinkedList<>();
         unionStoreEntityList.addAll(storeList);
         unionStoreEntityList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
+
+        if(!positionIdList.isEmpty()){
+            begin = System.currentTimeMillis();
+            List<StoreEntity> closedStoreListForAllEmployee = storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList);
+            log.info("Binding closed shop by employee and cluster employee table ={}", System.currentTimeMillis() - begin);
+            unionStoreEntityList.addAll(closedStoreListForAllEmployee);
+        }
 
         List<StoreDto> storeDtoList = unionStoreEntityList.stream()
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))

@@ -17,6 +17,8 @@ data:
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
   LOG_LEVEL: 'INFO'
+  EMPOWERED_POSITION_ID: '50000741,52036727,50000686'
+  INTERVAL_DAYS_FOR_CLOSED_SHOP: '30'
 
 # in secret PG_USER:
 # in secret PG_PASSWORD:

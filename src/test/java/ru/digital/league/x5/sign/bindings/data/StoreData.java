@@ -12,7 +12,7 @@ public class StoreData {
 
     public static StoreInfoDto storeInfoDto() {
 
-        List<StoreDto> storeDtos = Arrays.asList(storeDto1(), storeDto2());
+        List<StoreDto> storeDtos = Arrays.asList(storeDto1(), storeDto2(), storeDto3());
 
         return StoreInfoDto.builder()
                 .stores(storeDtos)
@@ -46,6 +46,18 @@ public class StoreData {
                 .address("111111, Москва г, Никольская ул, 1")
                 .openDate(LocalDate.of(2011, 1, 1))
                 .closeDate(null)
+                .build();
+    }
+
+    public static StoreDto storeDto3() {
+        return StoreDto.builder()
+                .mdmStoreId("1111")
+                .name("1111-Пятерочка.")
+                .cfoId("E11111111")
+                .clusterId("8888")
+                .address("111111, Москва г, Никольская ул, 1")
+                .openDate(LocalDate.of(2011, 1, 1))
+                .closeDate(LocalDate.of(2021,1,1))
                 .build();
     }
 
