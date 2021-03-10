@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.ClusterEmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.ClusterEmployeeRepository;
-import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
 
 import java.util.List;
@@ -52,13 +51,6 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                 employeeEntityList = clusterEmployeeRepository.saveAll(employeeEntityList);
             }
             log.info("Saved cluster employee {} to DB", employeeEntityList);
-
         }
-    }
-
-    @Override
-    public ClusterEmployeeDto get(String personalNumber) {
-        ClusterEmployeeEntity clusterEmployee = clusterEmployeeRepository.getByPersonalNumber(personalNumber);
-        return clusterEmployee != null ? modelMapper.map(clusterEmployee, ClusterEmployeeDto.class) : null;
     }
 }

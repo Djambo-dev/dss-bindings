@@ -50,10 +50,4 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.info("Saved employee {} to DB", employeeEntityList);
         }
     }
-
-    @Override
-    public EmployeeDto get(String personalNumber) {
-        EmployeeEntity employeeEntity = employeeRepository.getByPersonalNumber(personalNumber);
-        return employeeEntity != null ? modelMapper.map(employeeEntity , EmployeeDto.class) : null;
-    }
 }

@@ -12,14 +12,7 @@ import java.util.List;
 @Configuration
 @EnableKafka
 @EnableAsync
-@ConfigurationProperties(prefix = "user")
 public class ApplicationConfig {
     //TODO web client, ssl etc.
 
-    private List<String> positionId = new ArrayList<>();
-
-    @Bean
-    public List<String> getPositionId(){
-        return this.positionId;
-    }
 }
