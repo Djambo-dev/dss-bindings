@@ -9,4 +9,5 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ApplicationConfig {
     //TODO web client, ssl etc.
+
 }

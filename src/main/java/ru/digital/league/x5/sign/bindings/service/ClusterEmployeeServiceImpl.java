@@ -51,7 +51,6 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                 employeeEntityList = clusterEmployeeRepository.saveAll(employeeEntityList);
             }
             log.info("Saved cluster employee {} to DB", employeeEntityList);
-
         }
     }
 }
