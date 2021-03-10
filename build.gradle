@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url "https://art.x5.ru/maven/" }
+        maven { url "https://art.x5.ru/artifactory/maven/" }
         maven { url "https://nx.x5.ru/repository/maven/" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
@@ -31,7 +31,7 @@ configurations {
 }
 
 repositories {
-    maven { url "https://art.x5.ru/maven/" }
+    maven { url "https://art.x5.ru/artifactory/maven/" }
     maven { url 'https://nx.x5.ru/repository/maven/' }
     mavenCentral()
 }
@@ -47,7 +47,7 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.modelmapper:modelmapper:2.3.5'
 
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
