@@ -24,8 +24,10 @@ public class StoreServiceImpl implements StoreService {
     @Value("${user.position-id}")
     private final List<Long> positionIdList;
 
+    // присвоение значения переменной требуется для прохождения тестов (в противном случае intervalDays = null), а также,
+    // чтобы не создавать конструктор данного класса с присвоением final переменной значения из application.yml
     @Value("${interval.days}")
-    private final Integer intervalDays;
+    private Integer intervalDays = 30;
 
     private final StoreRepository storeRepository;
     private final ModelMapper modelMapper;
@@ -50,16 +52,23 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreDto> getStoresByPersonalNumber(String personalNumber) {
         long begin = System.currentTimeMillis();
-        List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber, intervalDays, positionIdList);
+        List<StoreEntity> storeList = storeRepository.findAllByPersonalNumber(personalNumber);
         log.info("Binding by employee table ={}", System.currentTimeMillis() - begin);
 
         begin = System.currentTimeMillis();
-        List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber, intervalDays, positionIdList);
+        List<StoreEntity> storeListForCluster = storeRepository.findAllByClusterPersonalNumber(personalNumber);
         log.info("Binding by cluster employee table ={}", System.currentTimeMillis() - begin);
 
         List<StoreEntity> unionStoreEntityList = new LinkedList<>();
         unionStoreEntityList.addAll(storeList);
         unionStoreEntityList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
+
+        if(!positionIdList.isEmpty()){
+            begin = System.currentTimeMillis();
+            List<StoreEntity> closedStoreListForAllEmployee = storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList);
+            log.info("Binding closed shop by employee and cluster employee table ={}", System.currentTimeMillis() - begin);
+            unionStoreEntityList.addAll(closedStoreListForAllEmployee);
+        }
 
         List<StoreDto> storeDtoList = unionStoreEntityList.stream()
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))

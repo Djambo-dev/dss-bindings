@@ -62,7 +62,7 @@ package:
     - docker push ${IMAGE}:latest
     - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE}:latest
-  when: on_success
+  when: manual
 
 deploy_test:
   stage: deploy
@@ -83,7 +83,7 @@ deploy_test:
       NAMESPACE=${NAMESPACE}
       CONFIG_NAME=${CONFIG_NAME}
       SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
-  when: on_success
+  when: manual
 
 prod_image_save:
   stage: prepare_prod

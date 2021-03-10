@@ -9,25 +9,34 @@ import java.util.List;
 
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
-    @Query(value = "SELECT * FROM ( SELECT * FROM bindings.stores AS se " +
-            "LEFT JOIN bindings.employee as e ON se.cfo_id = e.cfo_id " +
-            "WHERE e.personal_number = :personalNumber) as js " +
-            "WHERE (js.close_date IS NULL) " +
-            "OR    (js.position_id in :positionIdList AND EXTRACT (DAY FROM now() - js.close_date) < :intervalDays)",
-            nativeQuery = true)
-    List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") String personalNumber,
-                                              @Param(value = "intervalDays") Integer intervalDays,
-                                              @Param(value = "positionIdList") List<Long> positionIdList);
+    @Query("SELECT se FROM StoreEntity se " +
+            "LEFT JOIN EmployeeEntity ee ON se.storeKey.cfoId = ee.cfoId " +
+            "WHERE ee.personalNumber = :personalNumber AND se.closeDate IS NULL")
+    List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") String personalNumber);
 
-    @Query(value = "SELECT * FROM ( SELECT * FROM bindings.stores AS se " +
-            "LEFT JOIN bindings.cluster_employee as ce ON se.cluster_id = ce.cluster_id " +
-            "WHERE ce.personal_number = :personalNumber) as js " +
-            "WHERE (js.close_date IS NULL) " +
-            "OR    (js.position_id in :positionIdList AND EXTRACT (DAY FROM now() - js.close_date) < :intervalDays) ",
+    @Query("SELECT se FROM StoreEntity se " +
+            "LEFT JOIN ClusterEmployeeEntity cee ON se.clusterId = cee.clusterId " +
+            "WHERE cee.personalNumber = :personalNumber AND se.closeDate IS NULL")
+    List<StoreEntity> findAllByClusterPersonalNumber(@Param(value = "personalNumber") String personalNumber);
+
+    @Query(value = "SELECT se.mdm_store_id , se.cfo_id , se.name , se.address, se.open_date , se.cluster_id , se.close_date, se.modified_date " +
+            "FROM bindings.stores AS se " +
+            "LEFT JOIN  bindings.cluster_employee AS ce ON ce.cluster_id = se.cluster_id " +
+            "WHERE (ce.personal_number = :personalNumber) AND " +
+            "(ce.position_id in :positionIdList) AND " +
+            "(extract ( day from now() - se.close_date ) < :datePeriod) " +
+            "UNION " +
+            "SELECT se.mdm_store_id , se.cfo_id , se.name , se.address, se.open_date , se.cluster_id , se.close_date, se.modified_date " +
+            "FROM bindings.stores AS se " +
+            "LEFT JOIN  bindings.employee AS e ON e.cfo_id = se.cfo_id " +
+            "WHERE (e.personal_number = :personalNumber) AND " +
+            "(e.position_id in :positionIdList) AND " +
+            "(extract ( day from now() - se.close_date ) < :datePeriod)",
             nativeQuery = true)
-    List<StoreEntity> findAllByClusterPersonalNumber(@Param(value = "personalNumber") String personalNumber,
-                                                     @Param(value = "intervalDays") Integer intervalDays,
-                                                     @Param(value = "positionIdList") List<Long> positionIdList);
+    List<StoreEntity> findAllClosedShopByPersonalNumber(@Param(value = "personalNumber") String personalNumber,
+                                                        @Param(value = "datePeriod") Integer datePeriod,
+                                                        @Param(value = "positionIdList") List<Long> positionIdList);
 
     StoreEntity findByStoreKeyMdmStoreId(String storeId);
+
 }
