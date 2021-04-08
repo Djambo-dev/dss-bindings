@@ -74,7 +74,7 @@ public class StoreServiceImpl implements StoreService {
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
                 .collect(Collectors.toList());
 
-        log.info("Stores for document service: {}", storeDtoList);
+        log.info("Stores for personalNumber={}: {}", personalNumber, storeDtoList);
 
         return storeDtoList;
     }
