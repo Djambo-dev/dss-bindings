@@ -1,9 +1,9 @@
 package ru.digital.league.x5.sign.bindings.service;
 
-import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
+import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 
 public interface ClusterEmployeeService {
 
-    void save(ClusterEmployeeListDto clusterEmployeeListDto);
+    void save(ClusterEmployeeList clusterEmployeeListDto);
 
 }

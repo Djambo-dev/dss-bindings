@@ -1,5 +1,6 @@
 package ru.digital.league.x5.sign.bindings.service;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,18 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.digital.league.x5.sign.bindings.config.ModelMapperConfig;
 import ru.digital.league.x5.sign.bindings.db.repository.EmployeeRepository;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
+import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
 
 import java.util.List;
 
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeInfoDto;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeInfoDtoWithNull;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.emptyEmployeeInfoDto;
+import static org.mockito.Mockito.*;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
@@ -35,47 +30,80 @@ public class EmployeeServiceImplTest {
 
     private EmployeeService employeeService;
 
-    private EmployeeListDto employeeListDto;
-    private EmployeeListDto emptyEmployeeListDto;
-    private EmployeeListDto employeeListDtoWithNull;
+    private EmployeeList employeeList;
+    private EmployeeList emptyEmployeeList;
+    private EmployeeList employeeListWithNull;
+    private EmployeeList employeeListWithNull_and_withoutNull;
 
     @Before
     public void setUp() {
-
         employeeService = new EmployeeServiceImpl(employeeRepository, modelMapper);
 
-        employeeListDto = employeeInfoDto();
-        emptyEmployeeListDto = emptyEmployeeInfoDto();
-        employeeListDtoWithNull = employeeInfoDtoWithNull();
+        employeeList = employeeList();
+        emptyEmployeeList = emptyEmployeeList();
+        employeeListWithNull = employeeListWithNull();
+        employeeListWithNull_and_withoutNull = employeeListWithNull_and_withoutNull();
     }
+
+    /**
+     *  Проверяем сохранение сущностей EmployeeEntity (case: обычный случай)
+     *  Результат: корректная обработка входящих данных
+     * */
 
     @Test
     public void save() {
         // вызов
-        employeeService.save(employeeListDto);
+        employeeService.save(employeeList);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(anyList());
+        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
         verify(employeeRepository, times(1)).saveAll(anyList());
     }
+
+    /**
+     *  Проверяем сохранение сущностей EmployeeEntity (case: выгрузка, содержащая пустой список привязок)
+     *  Результат: пропуск методов репозитория на сохранение и удаление
+     * */
+
 
     @Test
     public void save_emptyList() {
         // вызов
-        employeeService.save(emptyEmployeeListDto);
+        employeeService.save(emptyEmployeeList);
         // проверка
         verify(employeeRepository, times(0)).deleteAllByCfoIdIn(anyList());
         verify(employeeRepository, times(0)).saveAll(anyList());
     }
 
+    /**
+     *  Проверяем сохранение сущности EmployeeEntity (case: наличие null в полях сущности)
+     *  Результат: сохранение отсутствует
+     * */
+
     @Test
-    public void save_listWithoutNull() {
+    public void save_listWithNull() {
         // подготовка
         when(employeeRepository.saveAll(employeeEntityList1())).thenReturn(employeeEntityList1());
         // вызов
-        employeeService.save(employeeListDtoWithNull);
+        employeeService.save(employeeListWithNull);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E1007345"));
-        verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
+        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(Lists.emptyList());
+        verify(employeeRepository, times(1)).saveAll(Lists.emptyList());
     }
 
+
+    /**
+     *  Проверяем сохранение сущностей EmployeeEntity (case: наличие null полей в одной сущности)
+     *  Результат : сохранение 2 из 3-х сущностей
+     * */
+
+    @Test
+    public void save_listWithNull_and_withoutNull() {
+        // подготовка
+        when(employeeRepository.saveAll(employeeEntityList1RevertPartTimePN())).thenReturn(employeeEntityList1RevertPartTimePN());
+        // вызов
+        employeeService.save(employeeListWithNull_and_withoutNull);
+        // проверка
+        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
+        verify(employeeRepository, times(1)).saveAll(employeeEntityList1RevertPartTimePN());
+    }
 }
