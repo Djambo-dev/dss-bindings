@@ -15,8 +15,14 @@ import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
-import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.clusterEmployeeEntityList1;
+import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.clusterEmployeeList;
+import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.clusterEmployeeListWithInvalidValue;
+import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.clusterEmployeeListWithInvalidValue_and_CorrectValue;
+import static ru.digital.league.x5.sign.bindings.data.ClusterEmployeeData.emptyClusterEmployeeList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
