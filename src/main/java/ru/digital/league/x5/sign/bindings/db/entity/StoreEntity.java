@@ -4,11 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.digital.league.x5.sign.bindings.db.key.StoreKey;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
@@ -20,8 +19,12 @@ import java.time.LocalDate;
 @Table(schema = "bindings", name = "stores")
 public class StoreEntity extends BindingEntity {
 
-    @EmbeddedId
-    private StoreKey storeKey;
+    @Id
+    @Column(name = "mdm_store_id")
+    private String mdmStoreId;
+
+    @Column(name = "cfo_id")
+    private String cfoId;
 
     @Column(name = "name")
     private String name;
@@ -46,12 +49,7 @@ public class StoreEntity extends BindingEntity {
             return false;
         }
         StoreEntity se = (StoreEntity) obj;
-        if (this.getStoreKey() == null || se.getStoreKey() == null) {
-            return false;
-        }
-
-        return this.getStoreKey().getCfoId().equals(se.getStoreKey().getCfoId()) &&
-                this.getStoreKey().getMdmStoreId().equals(se.getStoreKey().getMdmStoreId());
+        return this.getMdmStoreId().equals(se.getMdmStoreId());
     }
 }
 

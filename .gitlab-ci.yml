@@ -39,7 +39,7 @@ before_script:
   - export GRADLE_USER_HOME=/home/gradle/project
 
 build:
-  image: gradle:jdk11
+  image: gradle:6.8-jdk11
   stage: build
   script:
     - gradle clean build

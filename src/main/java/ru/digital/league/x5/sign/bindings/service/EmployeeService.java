@@ -1,7 +1,7 @@
 package ru.digital.league.x5.sign.bindings.service;
 
-import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
+import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
 
 public interface EmployeeService {
-    void save(EmployeeListDto employeeBindingInfo);
+    void save(EmployeeList employeeBindingInfo);
 }

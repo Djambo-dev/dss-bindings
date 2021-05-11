@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.ClusterEmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.ClusterEmployeeRepository;
 import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
+import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +31,11 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
 
     @Override
     @Transactional
-    public void save(ClusterEmployeeListDto clusterEmployeeListDto) {
-        log.info("Saving cluster employee bindings...: {}", clusterEmployeeListDto);
+    public void save(ClusterEmployeeList clusterEmployeeList) {
+        log.info("Saving cluster employee bindings...: {}", clusterEmployeeList);
+
+        ClusterEmployeeListDto clusterEmployeeListDto = modelMapper.map(clusterEmployeeList, ClusterEmployeeListDto.class);
+
         if (!CollectionUtils.isEmpty(clusterEmployeeListDto.getClusterEmployeeBindingList())) {
             List<ClusterEmployeeEntity> employeeEntityList = clusterEmployeeListDto.getClusterEmployeeBindingList().stream()
                     .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем null записи

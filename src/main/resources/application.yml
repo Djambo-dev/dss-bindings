@@ -6,16 +6,6 @@ logging:
     root: ${LOG_LEVEL:INFO}
 
 spring:
-  kafka:
-    bootstrap-servers: ${KAFKA_URL}
-    consumer:
-      group-id: ${KAFKA_CONSUMER_GROUP_ID}
-    reconnect:
-      backoff:
-        ms: ${KAFKA_RECONNECT_BACKOFF:1000}
-        max_ms: ${KAFKA_RECONNECT_BACKOFF_MAX:60000}
-  autoconfigure:
-    exclude: "org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration"
   datasource:
     username: ${PG_USER}
     password: ${PG_PASSWORD}
@@ -30,18 +20,6 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
-
-kafka:
-  topic:
-    inbox_stores: ${KAFKA_INBOX_STORES_TOPIC}
-    inbox_bindings: ${KAFKA_INBOX_BINDINGS_TOPIC}
-    cluster_employee: ${KAFKA_CLUSTER_EMPLOYEE}
-  ssl:
-    enable: ${KAFKA_SSL_ENABLE:false}
-    key-store-path: ${KAFKA_KEY_STORE_PATH}
-    key-store-password: ${KAFKA_KEY_STORE_PASSWORD}
-    trust-store-path: ${KAFKA_TRUST_STORE_PATH}
-    trust-store-password: ${KAFKA_TRUST_STORE_PASSWORD}
 
 management:
   endpoints:

@@ -22,3 +22,15 @@
 |LOG_LEVEL| - | INFO | Уровень логирования |
 |EMPOWERED_POSITION_ID| 50000000,50000001 | Пустой список | Идентификаторы полномочий сотрудников с правом просмотра закрытых магазинов|
 |RESTRICTION_DAY_FOR_CLOSED_SHOP| - |30|Количество дней после которых отображение закрытых магазинов будет недоступно|
+
+### Метрики микросервиса (с использованием Prometheus)
+
+Просмотр метрик микросервиса осуществляется связкой _Prometheus_ + _Grafana_ проекта OpenShift _"Doc Sign PROD Monitoring"_.
+Для отображения одной из метрик в _Grafana_, предоставленных в таблице ниже,  достаточно создать дашборд с выбором конкретной метрики 
+(Например "count_of_income_store").
+
+| Метрика | Показатели   | Назначение          | Объект | Регион | Имя региона |
+| :---:   | :---:        | :---:               | :---:  | :---:  | :---:       |
+|count_of_income_store|Количество/время|Подсчет количества входящих данных (магазины)| Store |Controller|BindingIntegrationController|
+|count_of_income_employee|Количество/время|Подсчет количества входящих данных (сотрудники)|EmployeeBinding|Controller|BindingIntegrationController|
+|count_of_income_cluster_employee|Количество/время|Подсчет количества входящих данных (кластерные сотрудники)|ClusterEmployeeBinding|Controller|BindingIntegrationController|

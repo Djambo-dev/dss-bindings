@@ -14,12 +14,20 @@ import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
 import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
+import ru.digital.league.x5.sign.bindings.xml.model.Store;
+import ru.digital.league.x5.sign.bindings.xml.model.StoreInfo;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,9 +45,10 @@ public class StoreServiceImplTest {
 
     private StoreService storeService, storeService_withEmptyPositionIdList;
 
-    private StoreInfoDto storeInfoDto;
-    private StoreInfoDto emptyStoreInfoDto;
-    private List<StoreDto> storeDtos;
+    private StoreInfo storeInfo;
+    private StoreInfo emptyStoreInfo;
+    private List<Store> stores;
+    private StoreInfoDto storesDto;
 
     private String personalNumber = "111";
     private String mdmStoreId = "3402";
@@ -53,9 +62,10 @@ public class StoreServiceImplTest {
     public void setUp() {
         storeService = new StoreServiceImpl(positionIdList, storeRepository, modelMapper);
         storeService_withEmptyPositionIdList = new StoreServiceImpl(emptyPositionIdList, storeRepository, modelMapper);
-        storeInfoDto = StoreData.storeInfoDto();
-        emptyStoreInfoDto = StoreData.emptyStoreInfoDto();
-        storeDtos = Arrays.asList(StoreData.storeDto1(), StoreData.storeDto2(), StoreData.storeDto3());
+        storeInfo = StoreData.storeInfo();
+        emptyStoreInfo = StoreData.emptyStoreInfo();
+        stores = Arrays.asList(StoreData.store1(), StoreData.store2(), StoreData.store3());
+        storesDto = StoreData.storeInfoDto();
     }
 
     /**
@@ -64,7 +74,7 @@ public class StoreServiceImplTest {
     @Test
     public void saveStore_success() {
         //вызов
-        storeService.save(storeInfoDto);
+        storeService.save(storeInfo);
 
         //проверка
         verify(storeRepository, times(1)).saveAll(anyList());
@@ -76,7 +86,7 @@ public class StoreServiceImplTest {
     @Test
     public void saveStore_emptyList() {
         //вызов
-        storeService.save(emptyStoreInfoDto);
+        storeService.save(emptyStoreInfo);
 
         //проверка
         verify(storeRepository, times(0)).saveAll(anyList());
@@ -111,7 +121,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_severalStores() {
         // подготовка
-        List<StoreEntity> storeEntities = storeDtos.stream()
+        List<StoreEntity> storeEntities = storesDto.getStores().stream()
                 .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                 .collect(Collectors.toList());
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
@@ -121,8 +131,7 @@ public class StoreServiceImplTest {
 
         //проверка
         verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
-        assertEquals(storeDtos, storesByPersonalNumber);
-
+        assertEquals(storesDto.getStores(), storesByPersonalNumber);
     }
 
     /**
@@ -151,14 +160,14 @@ public class StoreServiceImplTest {
     @Test
     public void getStoreByStoreId_success() {
         // подготовка
-        StoreEntity storeEntity = modelMapper.map(StoreData.storeDto1(), StoreEntity.class);
-        when(storeRepository.findByStoreKeyMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
+        StoreEntity storeEntity = modelMapper.map(StoreData.store1(), StoreEntity.class);
+        when(storeRepository.findByMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
 
         //вызов
         StoreDto storeByStoreId = storeService.getStoreByStoreId(mdmStoreId);
 
         //проверка
-        verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
+        verify(storeRepository, times(1)).findByMdmStoreId(mdmStoreId);
         assertEquals(StoreData.storeDto1(), storeByStoreId);
     }
 
@@ -169,13 +178,13 @@ public class StoreServiceImplTest {
     @Test
     public void getStoreByStoreId_notFound() {
         // подготовка
-        when(storeRepository.findByStoreKeyMdmStoreId(mdmStoreId)).thenReturn(null);
+        when(storeRepository.findByMdmStoreId(mdmStoreId)).thenReturn(null);
 
         //вызов
         StoreDto storeByStoreId = storeService.getStoreByStoreId(mdmStoreId);
 
         //проверка
-        verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
+        verify(storeRepository, times(1)).findByMdmStoreId(mdmStoreId);
         assertNull(storeByStoreId);
     }
 
@@ -186,7 +195,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOO_oneStore() {
         // подготовка
-        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.storeDto2(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.store2(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
 
@@ -207,7 +216,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOO_twoStores() {
         // подготовка
-        List<StoreEntity> storeEntities = storeDtos.stream()
+        List<StoreEntity> storeEntities = storesDto.getStores().stream()
                 .map(storeDto -> modelMapper.map(storeDto, StoreEntity.class))
                 .collect(Collectors.toList());
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
@@ -219,7 +228,7 @@ public class StoreServiceImplTest {
         //проверка
         verify(storeRepository, times(1)).findAllByPersonalNumber(personalNumber);
         verify(storeRepository, times(1)).findAllByClusterPersonalNumber(personalNumber);
-        assertEquals(storeDtos, storesByPersonalNumber);
+        assertEquals(storesDto.getStores(), storesByPersonalNumber);
 
     }
 
@@ -230,8 +239,8 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOOandDM_twoStores() {
         // подготовка
-        List<StoreEntity> storeEntities = List.of(modelMapper.map(StoreData.storeDto1(), StoreEntity.class));
-        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.storeDto2(), StoreEntity.class));
+        List<StoreEntity> storeEntities = List.of(modelMapper.map(StoreData.store1(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesCluster = List.of(modelMapper.map(StoreData.store2(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(storeEntities);
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(storeEntitiesCluster);
 
@@ -253,7 +262,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_closedStore_oneStores(){
         // подготовка
-        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.storeDto3(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.store3(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList)).thenReturn(storeEntitiesWithClosedDay);
@@ -296,7 +305,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_InIntervalDaysForClosedShop_success() {
         // подготовка
-        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.storeDto3(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.store3(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList)).thenReturn(storeEntitiesWithClosedDay);
@@ -317,7 +326,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOT_InIntervalDaysForClosedShop_success() {
         // подготовка
-        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.storeDto3(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.store3(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList)).thenReturn(storeEntitiesWithClosedDay);
@@ -338,7 +347,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOO_InIntervalDaysForClosedShop_success() {
         // подготовка
-        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.storeDto3(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.store3(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList)).thenReturn(storeEntitiesWithClosedDay);
@@ -359,7 +368,7 @@ public class StoreServiceImplTest {
     @Test
     public void getStoresByPersonalNumber_NOO_NOT_InIntervalDaysForClosedShop_success() {
         // подготовка
-        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.storeDto3(), StoreEntity.class));
+        List<StoreEntity> storeEntitiesWithClosedDay = List.of(modelMapper.map(StoreData.store3(), StoreEntity.class));
         when(storeRepository.findAllByPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllByClusterPersonalNumber(personalNumber)).thenReturn(Collections.emptyList());
         when(storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList)).thenReturn(storeEntitiesWithClosedDay);
