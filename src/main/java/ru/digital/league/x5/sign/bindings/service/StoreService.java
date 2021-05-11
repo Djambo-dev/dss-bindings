@@ -1,7 +1,7 @@
 package ru.digital.league.x5.sign.bindings.service;
 
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
-import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
+import ru.digital.league.x5.sign.bindings.xml.model.StoreInfo;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface StoreService {
     /**
      * Сохраняем/обновляем список магазинов в БД
      */
-    void save(StoreInfoDto storeInfo);
+    void save(StoreInfo storeInfo);
 
     /**
      * Ищем привязанные к сотруднику магазины по его табельному номеру
