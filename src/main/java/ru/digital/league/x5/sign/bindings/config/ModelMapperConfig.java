@@ -13,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.ClusterEmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
-import ru.digital.league.x5.sign.bindings.db.key.StoreKey;
 import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
@@ -170,9 +169,9 @@ public class ModelMapperConfig {
             public StoreEntity convert(MappingContext<Store, StoreEntity> context) {
                 Store source = context.getSource();
                 Assert.notNull(source, "Object of convert is missing");
-                StoreKey storeKey = new StoreKey(source.getMdmStoreId(), source.getCfoId());
                 StoreEntity storeEntity = new StoreEntity();
-                storeEntity.setStoreKey(storeKey);
+                storeEntity.setMdmStoreId(source.getMdmStoreId());
+                storeEntity.setCfoId(source.getCfoId());
                 storeEntity.setAddress(source.getAddress());
                 storeEntity.setName(source.getName());
                 storeEntity.setOpenDate(source.getOpenDate());
@@ -189,13 +188,13 @@ public class ModelMapperConfig {
             public StoreEntity convert(MappingContext<StoreDto, StoreEntity> context) {
                 StoreDto source = context.getSource();
                 Assert.notNull(source, "Object of convert is missing");
-                StoreKey storeKey = new StoreKey(source.getMdmStoreId(), source.getCfoId());
                 StoreEntity storeEntity = new StoreEntity();
+                storeEntity.setMdmStoreId(source.getMdmStoreId());
+                storeEntity.setCfoId(source.getCfoId());
                 storeEntity.setAddress(source.getAddress());
                 storeEntity.setName(source.getName());
                 storeEntity.setOpenDate(source.getOpenDate());
                 storeEntity.setCloseDate(source.getCloseDate());
-                storeEntity.setStoreKey(storeKey);
                 storeEntity.setClusterId(source.getClusterId());
                 return storeEntity;
             }
@@ -213,8 +212,8 @@ public class ModelMapperConfig {
                 storeDto.setName(source.getName());
                 storeDto.setOpenDate(source.getOpenDate());
                 storeDto.setCloseDate(source.getCloseDate());
-                storeDto.setMdmStoreId(source.getStoreKey().getMdmStoreId());
-                storeDto.setCfoId(source.getStoreKey().getCfoId());
+                storeDto.setMdmStoreId(source.getMdmStoreId());
+                storeDto.setCfoId(source.getCfoId());
                 storeDto.setClusterId(source.getClusterId());
                 return storeDto;
             }

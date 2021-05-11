@@ -84,7 +84,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreDto getStoreByStoreId(String storeId) {
-        StoreEntity storeEntity = storeRepository.findByStoreKeyMdmStoreId(storeId);
+        StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
         if (storeEntity == null) {
             log.warn("Not found store by id {}", storeId);
             return null;

@@ -161,13 +161,13 @@ public class StoreServiceImplTest {
     public void getStoreByStoreId_success() {
         // подготовка
         StoreEntity storeEntity = modelMapper.map(StoreData.store1(), StoreEntity.class);
-        when(storeRepository.findByStoreKeyMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
+        when(storeRepository.findByMdmStoreId(mdmStoreId)).thenReturn(storeEntity);
 
         //вызов
         StoreDto storeByStoreId = storeService.getStoreByStoreId(mdmStoreId);
 
         //проверка
-        verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
+        verify(storeRepository, times(1)).findByMdmStoreId(mdmStoreId);
         assertEquals(StoreData.storeDto1(), storeByStoreId);
     }
 
@@ -178,13 +178,13 @@ public class StoreServiceImplTest {
     @Test
     public void getStoreByStoreId_notFound() {
         // подготовка
-        when(storeRepository.findByStoreKeyMdmStoreId(mdmStoreId)).thenReturn(null);
+        when(storeRepository.findByMdmStoreId(mdmStoreId)).thenReturn(null);
 
         //вызов
         StoreDto storeByStoreId = storeService.getStoreByStoreId(mdmStoreId);
 
         //проверка
-        verify(storeRepository, times(1)).findByStoreKeyMdmStoreId(mdmStoreId);
+        verify(storeRepository, times(1)).findByMdmStoreId(mdmStoreId);
         assertNull(storeByStoreId);
     }
 
