@@ -22,6 +22,7 @@ public class OAuth2WebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
             ignoredURLS.add("/**");
         }
         ignoredURLS.add("/actuator/**");
+        ignoredURLS.add("/bind/**");
         web.ignoring().antMatchers(ignoredURLS.toArray(new String[0]));
     }
 }
