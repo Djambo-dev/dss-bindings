@@ -68,7 +68,7 @@ package:
 package_prod:
   stage: containerize_prod
   before_script:
-    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL_PROD}
+    - docker login -u ${REGISTRY_LOGIN_PROD} -p ${REGISTRY_PASSWORD_PROD} ${REGISTRY_URL_PROD}
   script:
     - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
