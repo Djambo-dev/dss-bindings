@@ -25,13 +25,14 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
-  IMAGE_PROD: "${REGISTRY_URL}/${CI_PROJECT_NAME}-prod"
+  IMAGE_PROD: "${REGISTRY_URL_PROD}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
   SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
 stages:
   - build
   - containerize
+  - containerize_prod
   - prepare_prod
   - deploy
 
@@ -64,6 +65,25 @@ package:
     - docker rmi ${IMAGE}:latest
   when: manual
 
+package_prod:
+  stage: containerize_prod
+  before_script:
+    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL_PROD}
+  script:
+    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
+    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
+    - cp Dockerfile_tmp Dockerfile
+    - docker build --pull -t ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
+    - docker tag ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE_PROD}:latest
+    - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
+    - docker push ${IMAGE_PROD}:latest
+    - docker rmi ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE_PROD}:latest
+  when: manual
+  only:
+    refs:
+      - /^release.*$/
+
 deploy_test:
   stage: deploy
   variables:
@@ -84,20 +104,6 @@ deploy_test:
       CONFIG_NAME=${CONFIG_NAME}
       SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
-
-prod_image_save:
-  stage: prepare_prod
-  before_script:
-    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
-  script:
-    - docker pull ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker rmi -f $(docker images -q)
-  when: manual
-  only:
-    refs:
-      - /^release.*$/
 
 deploy_prod:
   stage: deploy
