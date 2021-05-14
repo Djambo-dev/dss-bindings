@@ -16,6 +16,7 @@ insert into bindings.employee(cfo_id, personal_number, position_id, position_nam
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1040876','1678992', 56000001,'Управляющий магазином', 'KOLCZOV.MICHAIL', now());
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1040876','1661372', 56000002,'Территориальный менеджер', 'BELOZEROV.LEV', now());
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1040876','1604646', 56000003,'Директор по продажам', 'ASTAHOVA.ULIYA', now());
+
 -- cfo_id = E1046351
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1046351','1760149', 56000001,'Управляющий магазином', 'KATAFEEV.ALEXANDR', now());
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1046351','1639616', 56000002,'Территориальный менеджер', 'KUZNEZOV.ANDREY', now());
