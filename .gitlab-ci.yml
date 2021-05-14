@@ -80,9 +80,9 @@ package_prod:
     - docker rmi ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE_PROD}:latest
   when: manual
-  only:
-    refs:
-      - /^release.*$/
+#  only:
+#    refs:
+#      - /^release.*$/
 
 deploy_test:
   stage: deploy
