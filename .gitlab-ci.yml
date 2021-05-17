@@ -61,11 +61,8 @@ package:
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
     - cp Dockerfile_tmp Dockerfile
     - docker build --pull -t ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
     - docker push ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE}:latest
     - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker rmi ${IMAGE}:latest
   when: manual
 
 package_prod:
@@ -77,11 +74,8 @@ package_prod:
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
     - cp Dockerfile_tmp Dockerfile
     - docker build --pull -t ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE_PROD}:latest
     - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE_PROD}:latest
     - docker rmi ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker rmi ${IMAGE_PROD}:latest
   when: manual
 #  only:
 #    refs:
