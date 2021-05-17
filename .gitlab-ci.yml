@@ -22,11 +22,6 @@ services:
       - "--dns-search=x5.ru"  # боремся с ошибкой "Could not resolve host: scm.x5.ru" при сборке
 
 variables:
-  SPRING_PROFILES_ACTIVE: gitlab-ci
-  REGISTRY_PATH: "doc-sign"
-  DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
   IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
   IMAGE_PROD: "${REGISTRY_URL_PROD}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
@@ -35,8 +30,6 @@ variables:
 stages:
   - build
   - containerize
-  - containerize_prod
-  - prepare_prod
   - deploy
 
 before_script:
@@ -66,7 +59,7 @@ package:
   when: manual
 
 package_prod:
-  stage: containerize_prod
+  stage: containerize
   before_script:
     - docker login -u ${REGISTRY_LOGIN_PROD} -p ${REGISTRY_PASSWORD_PROD} ${REGISTRY_URL_PROD}
   script:
@@ -77,9 +70,9 @@ package_prod:
     - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
   when: manual
-#  only:
-#    refs:
-#      - /^release.*$/
+  only:
+    refs:
+      - /^release.*$/
 
 deploy_test:
   stage: deploy
