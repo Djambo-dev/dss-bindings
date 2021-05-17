@@ -11,12 +11,12 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     @Query("SELECT se FROM StoreEntity se " +
             "LEFT JOIN EmployeeEntity ee ON se.cfoId = ee.cfoId " +
-            "WHERE ee.personalNumber = :personalNumber AND se.closeDate IS NULL")
+            "WHERE ee.personalNumber = :personalNumber AND se.closeDate IS NULL AND se.openDate IS NOT NULL")
     List<StoreEntity> findAllByPersonalNumber(@Param(value = "personalNumber") String personalNumber);
 
     @Query("SELECT se FROM StoreEntity se " +
             "LEFT JOIN ClusterEmployeeEntity cee ON se.clusterId = cee.clusterId " +
-            "WHERE cee.personalNumber = :personalNumber AND se.closeDate IS NULL")
+            "WHERE cee.personalNumber = :personalNumber AND se.closeDate IS NULL AND se.openDate IS NOT NULL")
     List<StoreEntity> findAllByClusterPersonalNumber(@Param(value = "personalNumber") String personalNumber);
 
     @Query(value = "SELECT se.mdm_store_id , se.cfo_id , se.name , se.address, se.open_date , se.cluster_id , se.close_date, se.modified_date " +
