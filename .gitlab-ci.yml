@@ -22,6 +22,11 @@ services:
       - "--dns-search=x5.ru"  # боремся с ошибкой "Could not resolve host: scm.x5.ru" при сборке
 
 variables:
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+  REGISTRY_PATH: "doc-sign"
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
   IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
   IMAGE_PROD: "${REGISTRY_URL_PROD}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
