@@ -48,7 +48,7 @@ build:
       - build/libs/*.jar
     expire_in: 1 day
 
-package:
+package_test:
   stage: containerize
   before_script:
     - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
