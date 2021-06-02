@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://x5.ru/mdm"
+           xmlns:ns0="http://x5.ru/mdm"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import schemaLocation="store_tags_desc.xsd" />
+    <xs:import schemaLocation="store.xsd" namespace="http://www.ibm.com/mdm/entry01" />
+    <xs:element name="mt_mdm_ecp_werk">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="messageHeader" />
+                <xs:element xmlns:q1="http://www.ibm.com/mdm/entry01" ref="q1:Item" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
