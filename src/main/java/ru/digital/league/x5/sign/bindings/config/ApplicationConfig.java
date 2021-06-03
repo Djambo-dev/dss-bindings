@@ -11,7 +11,8 @@ import org.springframework.web.filter.ServletContextRequestLoggingFilter;
 @EnableAsync
 public class ApplicationConfig {
 
-    @Value("${log.integration-request.enable}") boolean isEnable;
+    @Value("${log.integration-request.enable}")
+    private boolean isEnable;
 
     @Bean
     public ServletContextRequestLoggingFilter requestLoggingFilter() {

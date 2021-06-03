@@ -1,6 +1,7 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,10 +12,11 @@ import java.util.List;
 /**
  * Данные привязки сотрудников к кластеру
  */
+@Component
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")
-public class ClusterEmployeeBinding {
+public class ClusterEmployeeBinding implements XmlObject{
 
     /**
      * Код кластера

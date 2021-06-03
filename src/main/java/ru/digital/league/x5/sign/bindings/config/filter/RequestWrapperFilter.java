@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ *  Фильтр необходим для кеширования payload, поступающего от MDM, в случае
+ * отключения сервлетного логирования (ServletContextRequestLoggingFilter)
+ * */
+
 @Component
 public class RequestWrapperFilter extends OncePerRequestFilter {
 

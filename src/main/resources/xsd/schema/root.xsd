@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+           targetNamespace="http://x5.ru/mdm"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import schemaLocation="types.xsd"/>
+    <xs:import schemaLocation="types_ns.xsd" namespace="http://www.ibm.com/mdm/entry01"/>
+    <xs:element name="mt_mdm_ecp_werk">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="messageHeader"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="Item" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="mt_mdm_ecp_cfo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="messageHeader"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="Item" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="mt_mdm_ecp_cluster">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="messageHeader"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="Item" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

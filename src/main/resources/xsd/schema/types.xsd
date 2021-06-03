@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import schemaLocation="types_ns.xsd" namespace="http://www.ibm.com/mdm/entry01"/>
+    <!--common-->
+    <xs:element name="messageHeader">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="reqId" type="xs:string"/>
+                <xs:element name="targetSystem" type="xs:string"/>
+                <xs:element name="serviceInterface" type="xs:string"/>
+                <xs:element name="interfaceNamespace"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MDM_ID">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NAME">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <!--store-->
+    <xs:element name="CFO">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ADDRESS_TEXT">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CLUSTER">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="OPEN_DATE">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CLOSE_DATE">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <!--cfo-->
+    <xs:element name="SHOP_PERNR">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="HPERN" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="USRID" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="occ" type="xs:unsignedInt" use="optional"/>
+            <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="FORMAT_NAME">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+
+    </xs:element>
+    <!--cluster-->
+    <xs:element name="CLS_PERNR">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="FIO" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="ROLE" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PROZT" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="HPERN" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="TYPE" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="USRID" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="SEX" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="EMAIL" minOccurs="0"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="MOBILE_PHONE" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="occ" type="xs:unsignedInt" use="optional"/>
+            <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NETWORK_ID">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
