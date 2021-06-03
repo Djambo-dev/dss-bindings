@@ -4,6 +4,9 @@
 # REGISTRY_URL           - docker registry address
 # REGISTRY_LOGIN         - docker registry login
 # REGISTRY_PASSWORD      - docker regisry password
+# REGISTRY_URL_PROD      - docker registry address
+# REGISTRY_LOGIN_PROD    - docker registry login
+# REGISTRY_PASSWORD_PROD - docker regisry password
 # OPENSHIFT_URL_TEST     - openshift API url (testing stage)
 # OPENSHIFT_URL_PROD     - openshift API url (production stage)
 # OPENSHIFT_TOKEN_TEST   - openshift serviceaccount token (testing stage)
