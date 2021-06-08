@@ -1,7 +1,6 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 import ru.digital.league.x5.sign.bindings.xml.adapter.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 /**
  * Данные магазина
  */
-@Component
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")

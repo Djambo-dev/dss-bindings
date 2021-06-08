@@ -1,14 +1,12 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@Component
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "CLS_PERNR")

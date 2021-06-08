@@ -1,7 +1,6 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -21,7 +20,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * сотруднику документы всех магазинов (по основной и совмещаемой работе) добавляется поле linkedPersonalNumber,
  * в котором для совмещаемой должности будет указан основной табельный номер.
  */
-@Component
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "SHOP_PERNR")
