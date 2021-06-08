@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")
-public class ClusterEmployeeBinding implements XmlObject{
+public class ClusterEmployeeBinding {
 
     /**
      * Код кластера

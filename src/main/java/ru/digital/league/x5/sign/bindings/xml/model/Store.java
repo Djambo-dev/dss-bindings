@@ -1,11 +1,9 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import ru.digital.league.x5.sign.bindings.xml.adapter.LocalDateAdapter;
 
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -20,7 +18,7 @@ import java.time.LocalDate;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")
-public class Store implements XmlObject{
+public class Store {
 
     /**
      * Код завода SAP

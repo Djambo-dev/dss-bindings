@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "mt_mdm_ecp_cluster", namespace = "http://x5.ru/mdm")
-public class ClusterEmployeeList implements XmlObject{
+public class ClusterEmployeeList {
 
     /**
      * Привязки сотрудников к кластерам

@@ -1,6 +1,5 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "SHOP_PERNR")
-public class Employee implements XmlObject{
+public class Employee {
 
     /**
      * Табельный номер сотрудника

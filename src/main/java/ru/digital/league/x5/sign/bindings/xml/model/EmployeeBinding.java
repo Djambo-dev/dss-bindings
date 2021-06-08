@@ -1,6 +1,5 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")
-public class EmployeeBinding implements XmlObject{
+public class EmployeeBinding {
 
     /**
      * Код ЦФО

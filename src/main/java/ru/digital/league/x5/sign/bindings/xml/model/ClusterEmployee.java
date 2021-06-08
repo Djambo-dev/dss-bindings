@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "CLS_PERNR")
-public class ClusterEmployee implements XmlObject{
+public class ClusterEmployee {
 
     /**
      * Табельный номер сотрудника

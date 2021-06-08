@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+           targetNamespace="http://www.ibm.com/mdm/entry01"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import schemaLocation="types.xsd"/>
+    <xs:element name="Item">
+        <xs:complexType>
+            <xs:sequence>
+                <!--common-->
+                <xs:element ref="MDM_ID"/>
+                <xs:element ref="NAME"/>
+                <!--store-->
+                <xs:element ref="CFO"/>
+                <xs:element ref="ADDRESS_TEXT"/>
+                <xs:element ref="CLUSTER"/>
+                <xs:element ref="OPEN_DATE"/>
+                <xs:element ref="CLOSE_DATE"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
