@@ -2,7 +2,6 @@
 <xs:schema elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:import schemaLocation="types_ns.xsd" namespace="http://www.ibm.com/mdm/entry01"/>
-    <!--common-->
     <xs:element name="messageHeader" nillable="false">
         <xs:complexType>
             <xs:sequence>
@@ -22,20 +21,6 @@
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
-    <!--cfo-->
-    <xs:element name="SHOP_PERNR">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR" minOccurs="0"/>
-                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID" minOccurs="0"/>
-                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT" minOccurs="0"/>
-                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="HPERN" minOccurs="0"/>
-                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="USRID" minOccurs="0"/>
-            </xs:sequence>
-            <xs:attribute name="occ" type="xs:unsignedInt" use="optional"/>
-            <xs:attribute name="is_delta" type="xs:string" use="optional"/>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="FORMAT_NAME">
         <xs:complexType>
             <xs:simpleContent>
@@ -44,6 +29,18 @@
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
-
+    </xs:element>
+    <xs:element name="SHOP_PERNR">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="HPERN"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="USRID"/>
+            </xs:sequence>
+            <xs:attribute name="occ" type="xs:unsignedInt" use="optional"/>
+            <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+        </xs:complexType>
     </xs:element>
 </xs:schema>

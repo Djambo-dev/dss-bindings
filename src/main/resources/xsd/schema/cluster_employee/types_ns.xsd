@@ -6,10 +6,8 @@
     <xs:element name="Item">
         <xs:complexType>
             <xs:sequence>
-                <!--common-->
                 <xs:element ref="MDM_ID"/>
                 <xs:element ref="NAME" minOccurs="0"/>
-                <!--cluster-->
                 <xs:element ref="NETWORK_ID" minOccurs="0"/>
                 <xs:element ref="CLS_PERNR"  maxOccurs="unbounded"/>
             </xs:sequence>

@@ -7,8 +7,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="MDM_ID"/>
-                <!--cfo-->
-                <xs:element ref="FORMAT_NAME"/>
+                <xs:element ref="FORMAT_NAME" minOccurs="0"/>
                 <xs:element ref="SHOP_PERNR" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>

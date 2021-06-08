@@ -2,7 +2,6 @@
 <xs:schema elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:import schemaLocation="types_ns.xsd" namespace="http://www.ibm.com/mdm/entry01"/>
-    <!--common-->
     <xs:element name="messageHeader">
         <xs:complexType>
             <xs:sequence>
