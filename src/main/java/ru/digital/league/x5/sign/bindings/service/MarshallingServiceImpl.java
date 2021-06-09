@@ -23,8 +23,7 @@ public class MarshallingServiceImpl implements MarshallingService {
     public StoreInfo getUnmarshalStores(String storeInfoXml) {
         StoreInfo storeInfo;
         try {
-            Jaxb2Marshaller marshaller = marshallerCreator.getStoreMarshaller();
-            storeInfo = (StoreInfo) marshaller
+            storeInfo = (StoreInfo) marshallerCreator.getStoreMarshaller()
                     .unmarshal(getSource(storeInfoXml));
         } catch (Exception e) {
             throw new JaxbValidationException(storeInfoXml, e);
