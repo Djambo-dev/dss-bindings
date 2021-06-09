@@ -21,8 +21,8 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
 
     private static final String COMMON_PATH = "/xsd/schema/";
     private static final String ROOT_XSD = "/root.xsd";
-    private static final String TYPE_XSD = "/type.xsd";
-    private static final String TYPE_NS_XSD = "/type_ns.xsd";
+    private static final String TYPES_XSD = "/types.xsd";
+    private static final String TYPES_NS_XSD = "/types_ns.xsd";
 
     @Override
     public Jaxb2Marshaller getStoreMarshaller() {
@@ -57,7 +57,7 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
     private Resource[] getSchemas(String xmlModel) {
         return new Resource[]{
                 new ClassPathResource(COMMON_PATH + xmlModel + ROOT_XSD),
-                new ClassPathResource(COMMON_PATH + xmlModel + TYPE_XSD),
-                new ClassPathResource(COMMON_PATH + xmlModel + TYPE_NS_XSD)};
+                new ClassPathResource(COMMON_PATH + xmlModel + TYPES_XSD),
+                new ClassPathResource(COMMON_PATH + xmlModel + TYPES_NS_XSD)};
     }
 }
