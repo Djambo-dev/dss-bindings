@@ -45,7 +45,7 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
         return marshaller;
     }
 
-    private Jaxb2Marshaller getMarshaller(String xmlModel){
+    private Jaxb2Marshaller getMarshaller(String xmlModel) {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setSchemas(getSchemas(xmlModel));
         Map<String, Object> properties = new HashMap<>();
@@ -54,10 +54,10 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
         return marshaller;
     }
 
-    private Resource[] getSchemas (String xmlModel){
+    private Resource[] getSchemas(String xmlModel) {
         return new Resource[]{
-            new ClassPathResource(COMMON_PATH + xmlModel + ROOT_XSD),
-            new ClassPathResource(COMMON_PATH + xmlModel + TYPE_XSD),
-            new ClassPathResource(COMMON_PATH + xmlModel + TYPE_NS_XSD)};
+                new ClassPathResource(COMMON_PATH + xmlModel + ROOT_XSD),
+                new ClassPathResource(COMMON_PATH + xmlModel + TYPE_XSD),
+                new ClassPathResource(COMMON_PATH + xmlModel + TYPE_NS_XSD)};
     }
 }
