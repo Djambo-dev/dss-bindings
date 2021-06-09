@@ -13,7 +13,7 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
     private final static String EMPLOYEE_MARSHALLER = "employeeMarshaller";
     private final static String CLUSTER_EMPLOYEE_MARSHALLER = "clusterEmployeeMarshaller";
 
-    ApplicationContext context;
+    private ApplicationContext context;
 
     @Override
     public Jaxb2Marshaller getStoreMarshaller() {
