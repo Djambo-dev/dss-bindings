@@ -6,5 +6,4 @@ public interface Jaxb2MarshallerCreator {
     Jaxb2Marshaller getStoreMarshaller();
     Jaxb2Marshaller getEmployeeMarshaller();
     Jaxb2Marshaller getClusterEmployeeMarshaller();
-
 }
