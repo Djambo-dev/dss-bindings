@@ -61,7 +61,6 @@ package_test:
     - docker build --pull -t ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
     - docker push ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
     - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-
   when: manual
 
 package_prod:
