@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.digital.league.x5.sign.bindings.exception.JaxbValidationException;
 
-import java.io.IOException;
-
 import static org.apache.commons.lang3.StringUtils.substringBetween;
 
 @Slf4j
