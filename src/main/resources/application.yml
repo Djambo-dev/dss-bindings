@@ -40,3 +40,7 @@ user:
 
 interval:
   days: ${INTERVAL_DAYS_FOR_CLOSED_SHOP}
+
+log:
+  integration-request:
+    enable: ${PAYLOAD_VIEW_ENABLE:true}

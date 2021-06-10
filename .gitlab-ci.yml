@@ -1,12 +1,12 @@
 # in GITLAB register variables:
 # NAMESPACE_TEST         - project in openshift (testing stage)
 # NAMESPACE_PROD         - project in openshift (production stage)
-# REGISTRY_URL           - docker registry address
-# REGISTRY_LOGIN         - docker registry login
-# REGISTRY_PASSWORD      - docker regisry password
-# REGISTRY_URL_PROD      - docker registry address for production
-# REGISTRY_LOGIN_PROD    - docker registry login
-# REGISTRY_PASSWORD_PROD - docker regisry password
+# REGISTRY_URL           - docker registry address (testing stage)
+# REGISTRY_LOGIN         - docker registry login (testing stage)
+# REGISTRY_PASSWORD      - docker regisry password (testing stage)
+# REGISTRY_URL_PROD      - docker registry address (production stage)
+# REGISTRY_LOGIN_PROD    - docker registry login (production stage)
+# REGISTRY_PASSWORD_PROD - docker regisry password (production stage)
 # OPENSHIFT_URL_TEST     - openshift API url (testing stage)
 # OPENSHIFT_URL_PROD     - openshift API url (production stage)
 # OPENSHIFT_TOKEN_TEST   - openshift serviceaccount token (testing stage)

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.digital.league.x5.sign.bindings.metric.CounterMetrics;
 import ru.digital.league.x5.sign.bindings.service.ClusterEmployeeService;
 import ru.digital.league.x5.sign.bindings.service.EmployeeService;
+import ru.digital.league.x5.sign.bindings.service.MarshallingService;
 import ru.digital.league.x5.sign.bindings.service.StoreService;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
@@ -27,13 +28,15 @@ public class BindingIntegrationController {
     private final EmployeeService employeeBindingService;
     private final ClusterEmployeeService clusterEmployeeService;
     private final CounterMetrics counterMetrics;
+    private final MarshallingService marshallingService;
 
     /**
      * Загрузка информации по магазинам
      */
     @PostMapping(value = "/store", consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void loadStore(@RequestBody StoreInfo storeInfo) {
+    public void loadStore(@RequestBody String storeInfoXml) {
+        StoreInfo storeInfo = marshallingService.getUnmarshalStores(storeInfoXml);
         log.info("Got store from IBM MDM");
         counterMetrics.makeStoreBindingsMetrics(storeInfo);
         log.debug("Store info: {}", storeInfo);
@@ -45,7 +48,8 @@ public class BindingIntegrationController {
      */
     @PostMapping(value = "/employee", consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void loadEmployeeBindings(@RequestBody EmployeeList employeeList) {
+    public void loadEmployeeBindings(@RequestBody String employeeListXml) {
+        EmployeeList employeeList = marshallingService.getUnmarshalEmployee(employeeListXml);
         log.info("Got employee binding from IBM MDM");
         counterMetrics.makeEmployeeMetrics(employeeList);
         log.debug("Employee binding info: {}", employeeList);
@@ -57,7 +61,8 @@ public class BindingIntegrationController {
      */
     @PostMapping(value = "/cluster/employee", consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void loadClusterEmployeeBindings(@RequestBody ClusterEmployeeList employeeList) {
+    public void loadClusterEmployeeBindings(@RequestBody String clusterEmployeeListXml) {
+        ClusterEmployeeList employeeList = marshallingService.getUnmarshalClusterEmployee(clusterEmployeeListXml);
         log.info("Got cluster employee binding from IBM MDM");
         counterMetrics.makeClusterEmployeeMetrics(employeeList);
         log.debug("Cluster employee binding info: {}", employeeList);
