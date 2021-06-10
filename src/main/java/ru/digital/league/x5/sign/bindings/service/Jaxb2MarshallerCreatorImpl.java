@@ -17,16 +17,20 @@ public class Jaxb2MarshallerCreatorImpl implements Jaxb2MarshallerCreator {
 
     @Override
     public Jaxb2Marshaller getStoreMarshaller() {
-        return context.getBean(STORE_MARSHALLER, Jaxb2Marshaller.class);
+        return getMarshaller(STORE_MARSHALLER);
     }
 
     @Override
     public Jaxb2Marshaller getEmployeeMarshaller() {
-        return context.getBean(EMPLOYEE_MARSHALLER, Jaxb2Marshaller.class);
+        return getMarshaller(EMPLOYEE_MARSHALLER);
     }
 
     @Override
     public Jaxb2Marshaller getClusterEmployeeMarshaller() {
-        return context.getBean(CLUSTER_EMPLOYEE_MARSHALLER, Jaxb2Marshaller.class);
+        return getMarshaller(CLUSTER_EMPLOYEE_MARSHALLER);
+    }
+
+    private Jaxb2Marshaller getMarshaller(String marshaller){
+        return context.getBean(marshaller, Jaxb2Marshaller.class);
     }
 }
