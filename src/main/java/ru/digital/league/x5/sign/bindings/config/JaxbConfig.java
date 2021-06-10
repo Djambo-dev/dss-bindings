@@ -35,6 +35,7 @@ public class JaxbConfig {
     }
 
     @Bean("employeeMarshaller")
+    @Scope("prototype")
     public Jaxb2Marshaller getEmployeeJaxbMarshaller() {
         Jaxb2Marshaller marshaller = getMarshaller(EMPLOYEE_XML_MODEL);
         marshaller.setClassesToBeBound(EmployeeList.class);
@@ -42,6 +43,7 @@ public class JaxbConfig {
     }
 
     @Bean("clusterEmployeeMarshaller")
+    @Scope("prototype")
     public Jaxb2Marshaller getClusterEmployeeJaxbMarshaller() {
         Jaxb2Marshaller marshaller = getMarshaller(CLUSTER_EMPLOYEE_XML_MODEL);
         marshaller.setClassesToBeBound(ClusterEmployeeList.class);
