@@ -17,7 +17,7 @@ public class JaxbExceptionHandler {
     private final static String CLOSE_TAG = "</reqId>";
 
     @ExceptionHandler(JaxbValidationException.class)
-    public void processErrorLog(JaxbValidationException ex) throws IOException {
+    public void processErrorLog(JaxbValidationException ex) {
         String payload = ex.getIncomingMessage();
         String reqId = substringBetween(payload, OPEN_TAG, CLOSE_TAG);
         log.error("Wrong request message with reqId={} by reason: {}.\nPayload:[{}]",
