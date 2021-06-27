@@ -17,8 +17,9 @@ data:
   KAFKA_KEY_STORE_PATH: "/kafka_cert/kafka.x5.keystore.jks"
   KAFKA_TRUST_STORE_PATH: "/kafka_cert/kafka.x5.truststore.jks"
   LOG_LEVEL: 'INFO'
-  EMPOWERED_POSITION_ID: '50000741,52036727,50000686'
+  EMPOWERED_POSITION_ID: '50000741,52036727,50000686,56000001,56000002'
   INTERVAL_DAYS_FOR_CLOSED_SHOP: '30'
+  PAYLOAD_VIEW_ENABLE: 'true'
   JAVA_TOOL_OPTIONS: >
     -Djava.security.egd=file:/dev/./urandom
     -Dspring.profiles.active=production

@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.EmployeeRepository;
 import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
+import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,10 +31,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void save(EmployeeListDto employeeInfo) {
-        log.info("Saving employee bindings...: {}", employeeInfo);
-        if (!CollectionUtils.isEmpty(employeeInfo.getEmployeeBindingList())) {
-            List<EmployeeEntity> employeeEntityList = employeeInfo.getEmployeeBindingList().stream()
+    public void save(EmployeeList employeeList) {
+        EmployeeListDto employeeListDto = modelMapper.map(employeeList, EmployeeListDto.class);
+
+        if (employeeListDto != null && !CollectionUtils.isEmpty(employeeListDto.getEmployeeBindingList())) {
+            log.info("Saving employee bindings...: {}", employeeListDto);
+            List<EmployeeEntity> employeeEntityList = employeeListDto.getEmployeeBindingList().stream()
                     .filter(employeeDto -> employeeDto.getPersonalNumber() != null) // фильтруем null записи
                     .filter(employeeDto -> !employeeDto.getPersonalNumber().isEmpty()) // фильтруем "пустые" записи
                     .map(employeeDto -> modelMapper.map(employeeDto, EmployeeEntity.class))

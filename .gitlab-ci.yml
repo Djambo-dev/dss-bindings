@@ -1,9 +1,12 @@
 # in GITLAB register variables:
 # NAMESPACE_TEST         - project in openshift (testing stage)
 # NAMESPACE_PROD         - project in openshift (production stage)
-# REGISTRY_URL           - docker registry address
-# REGISTRY_LOGIN         - docker registry login
-# REGISTRY_PASSWORD      - docker regisry password
+# REGISTRY_URL           - docker registry address (testing stage)
+# REGISTRY_LOGIN         - docker registry login (testing stage)
+# REGISTRY_PASSWORD      - docker regisry password (testing stage)
+# REGISTRY_URL_PROD      - docker registry address (production stage)
+# REGISTRY_LOGIN_PROD    - docker registry login (production stage)
+# REGISTRY_PASSWORD_PROD - docker regisry password (production stage)
 # OPENSHIFT_URL_TEST     - openshift API url (testing stage)
 # OPENSHIFT_URL_PROD     - openshift API url (production stage)
 # OPENSHIFT_TOKEN_TEST   - openshift serviceaccount token (testing stage)
@@ -25,21 +28,20 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   IMAGE: "${REGISTRY_URL}/${CI_PROJECT_NAME}"
-  IMAGE_PROD: "${REGISTRY_URL}/${CI_PROJECT_NAME}-prod"
+  IMAGE_PROD: "${REGISTRY_URL_PROD}/${CI_PROJECT_NAME}"
   CONFIG_NAME: ${CI_PROJECT_NAME}-config
   SECRET_NAME: ${CI_PROJECT_NAME}-secret
 
 stages:
   - build
   - containerize
-  - prepare_prod
   - deploy
 
 before_script:
   - export GRADLE_USER_HOME=/home/gradle/project
 
 build:
-  image: gradle:jdk11
+  image: gradle:6.8-jdk11
   stage: build
   script:
     - gradle clean build
@@ -48,7 +50,7 @@ build:
       - build/libs/*.jar
     expire_in: 1 day
 
-package:
+package_test:
   stage: containerize
   before_script:
     - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
@@ -57,12 +59,25 @@ package:
     - grep -v "FROM" Dockerfile >> Dockerfile_tmp
     - cp Dockerfile_tmp Dockerfile
     - docker build --pull -t ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
-    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE}:latest
     - docker push ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE}:latest
     - docker rmi ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker rmi ${IMAGE}:latest
   when: manual
+
+package_prod:
+  stage: containerize
+  before_script:
+    - docker login -u ${REGISTRY_LOGIN_PROD} -p ${REGISTRY_PASSWORD_PROD} ${REGISTRY_URL_PROD}
+  script:
+    - echo "FROM ${BASE_IMAGE}" >  Dockerfile_tmp
+    - grep -v "FROM" Dockerfile >> Dockerfile_tmp
+    - cp Dockerfile_tmp Dockerfile
+    - docker build --pull -t ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} .
+    - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
+    - docker rmi ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
+  when: manual
+  only:
+    refs:
+      - /^release.*$/
 
 deploy_test:
   stage: deploy
@@ -84,20 +99,6 @@ deploy_test:
       CONFIG_NAME=${CONFIG_NAME}
       SECRET_NAME=${SECRET_NAME}| oc apply -n ${NAMESPACE} -f -
   when: manual
-
-prod_image_save:
-  stage: prepare_prod
-  before_script:
-    - docker login -u ${REGISTRY_LOGIN} -p ${REGISTRY_PASSWORD} ${REGISTRY_URL}
-  script:
-    - docker pull ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker tag ${IMAGE}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8} ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker push ${IMAGE_PROD}:${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}
-    - docker rmi -f $(docker images -q)
-  when: manual
-  only:
-    refs:
-      - /^release.*$/
 
 deploy_prod:
   stage: deploy

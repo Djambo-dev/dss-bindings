@@ -10,7 +10,8 @@ import org.springframework.util.CollectionUtils;
 import ru.digital.league.x5.sign.bindings.db.entity.StoreEntity;
 import ru.digital.league.x5.sign.bindings.db.repository.StoreRepository;
 import ru.digital.league.x5.sign.bindings.dto.StoreDto;
-import ru.digital.league.x5.sign.bindings.dto.StoreInfoDto;
+import ru.digital.league.x5.sign.bindings.xml.model.Store;
+import ru.digital.league.x5.sign.bindings.xml.model.StoreInfo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,11 +39,13 @@ public class StoreServiceImpl implements StoreService {
      */
     @Override
     @Transactional
-    public void save(StoreInfoDto storeInfo) {
-        List<StoreDto> storeDtoList = storeInfo.getStores();
-        if (!CollectionUtils.isEmpty(storeDtoList)) {
-            log.info("Start process saving store({}) ", storeDtoList.size());
-            List<StoreEntity> storeEntityList = storeDtoList.stream().map(s -> modelMapper.map(s, StoreEntity.class)).collect(Collectors.toList());
+    public void save(StoreInfo storeInfo) {
+        List<Store> storeList = storeInfo.getStores();
+        if (!CollectionUtils.isEmpty(storeList)) {
+            log.info("Start process saving store({}) ", storeList.size());
+            List<StoreEntity> storeEntityList = storeList.stream()
+                    .map(s -> modelMapper.map(s, StoreEntity.class))
+                    .collect(Collectors.toList());
             log.info("Processing {}", storeEntityList);
             storeRepository.saveAll(storeEntityList);
             log.info("End saving {} stores", storeInfo.getStores().size());
@@ -63,7 +66,7 @@ public class StoreServiceImpl implements StoreService {
         unionStoreEntityList.addAll(storeList);
         unionStoreEntityList.addAll(storeListForCluster.stream().filter(se -> !storeList.contains(se)).collect(Collectors.toList()));
 
-        if(!positionIdList.isEmpty()){
+        if (!positionIdList.isEmpty()) {
             begin = System.currentTimeMillis();
             List<StoreEntity> closedStoreListForAllEmployee = storeRepository.findAllClosedShopByPersonalNumber(personalNumber, intervalDays, positionIdList);
             log.info("Binding closed shop by employee and cluster employee table ={}", System.currentTimeMillis() - begin);
@@ -74,14 +77,14 @@ public class StoreServiceImpl implements StoreService {
                 .map(storeEntity -> modelMapper.map(storeEntity, StoreDto.class))
                 .collect(Collectors.toList());
 
-        log.info("Stores for document service: {}", storeDtoList);
+        log.info("Stores for personalNumber={}: {}", personalNumber, storeDtoList);
 
         return storeDtoList;
     }
 
     @Override
     public StoreDto getStoreByStoreId(String storeId) {
-        StoreEntity storeEntity = storeRepository.findByStoreKeyMdmStoreId(storeId);
+        StoreEntity storeEntity = storeRepository.findByMdmStoreId(storeId);
         if (storeEntity == null) {
             log.warn("Not found store by id {}", storeId);
             return null;
