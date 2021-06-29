@@ -9,7 +9,7 @@
                 <xs:element ref="MDM_ID"/>
                 <xs:element ref="NAME" minOccurs="0"/>
                 <xs:element ref="NETWORK_ID" minOccurs="0"/>
-                <xs:element ref="CLS_PERNR"  maxOccurs="unbounded"/>
+                <xs:element ref="CLS_PERNR"  minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

@@ -41,7 +41,7 @@
     </xs:element>
     <xs:element name="CLS_PERNR">
         <xs:complexType>
-            <xs:sequence    >
+            <xs:sequence  minOccurs="0" maxOccurs="12">
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR"/>
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="FIO"/>
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="ROLE"/>

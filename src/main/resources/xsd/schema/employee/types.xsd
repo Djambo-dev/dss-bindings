@@ -32,7 +32,7 @@
     </xs:element>
     <xs:element name="SHOP_PERNR">
         <xs:complexType>
-            <xs:sequence>
+            <xs:sequence minOccurs="0" maxOccurs="6">
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR"/>
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID"/>
                 <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT"/>

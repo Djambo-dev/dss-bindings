@@ -2,7 +2,6 @@ package ru.digital.league.x5.sign.bindings.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
 import ru.digital.league.x5.sign.bindings.exception.JaxbValidationException;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
