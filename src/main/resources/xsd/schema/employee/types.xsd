@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import schemaLocation="types_ns.xsd" namespace="http://www.ibm.com/mdm/entry01"/>
+    <xs:element name="messageHeader" nillable="false">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="reqId" type="xs:string"/>
+                <xs:element name="targetSystem" type="xs:string"/>
+                <xs:element name="serviceInterface" type="xs:string"/>
+                <xs:element name="interfaceNamespace"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MDM_ID">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="FORMAT_NAME">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SHOP_PERNR">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="6">
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="PERNR"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_ID"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="STELL_TXT"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="HPERN"/>
+                <xs:element xmlns="http://www.ibm.com/mdm/entry01" ref="USRID"/>
+            </xs:sequence>
+            <xs:attribute name="occ" type="xs:unsignedInt" use="optional"/>
+            <xs:attribute name="is_delta" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

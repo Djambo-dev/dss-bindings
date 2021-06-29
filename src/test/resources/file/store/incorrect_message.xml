@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns0:mt_mdm_ecp_werk xmlns:ns0="http://x5.ru/mdm">
+    <messageHeader>
+        <reqId>468998</reqId>
+        <targetSystem>MSA_ECP</targetSystem>
+        <serviceInterface>WERK</serviceInterface>
+        <interfaceNamespace/>
+    </messageHeader>
+    <Item xmlns="http://www.ibm.com/mdm/entry01">
+        <MDM_ID xmlns="">501V</MDM_ID>
+        <NAME xmlns="">123456 - ПУД</NAME>
+        <CFO xmlns=""><MDM_ID>E1007356</MDM_ID></CFO>
+        <ADDRESS_TEXT xmlns="">143900, Московская обл, Балашиха г, 40 лет Победы ул, Дом 1</ADDRESS_TEXT>
+        <CLUSTER xmlns="">4491</CLUSTER>
+        <OPEN_DATE xmlns="" is_delta="True">2014-07-04</OPEN_DATE>
+        <CLOSE_DATE xmlns="" is_delta="True">2021-04-10</CLOSE_DATE>
+    </Item>
+</ns0:mt_mdm_ecp_werk>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns0:mt_mdm_ecp_cluster xmlns:ns0="http://x5.ru/mdm">
+    <messageHeader>
+        <reqId>501393</reqId>
+        <targetSystem>MSA_ECP</targetSystem>
+        <serviceInterface>CLUSTER</serviceInterface>
+        <interfaceNamespace/></messageHeader>
+    <Item xmlns="http://www.ibm.com/mdm/entry01">
+        <MDM_ID xmlns="">9992</MDM_ID>
+        <NAME xmlns="">Логистика формата Дискаунтер Московского региона</NAME>
+        <NETWORK_ID xmlns="">D</NETWORK_ID>
+        <CLS_PERNR occ="1352778511" xmlns="">
+            <PERNR xmlns="http://www.ibm.com/mdm/entry01">616393</PERNR>
+            <FIO xmlns="http://www.ibm.com/mdm/entry01">Панов Михаил Владимирович</FIO>
+            <ROLE xmlns="http://www.ibm.com/mdm/entry01">директор кластера</ROLE>
+            <STELL_ID xmlns="http://www.ibm.com/mdm/entry01">52036679</STELL_ID>
+            <STELL_TXT xmlns="http://www.ibm.com/mdm/entry01">Директор кластера ТС5</STELL_TXT>
+            <PROZT xmlns="http://www.ibm.com/mdm/entry01">100.00</PROZT>
+            <HPERN xmlns="http://www.ibm.com/mdm/entry01"/>
+            <TYPE xmlns="http://www.ibm.com/mdm/entry01"/>
+            <USRID xmlns="http://www.ibm.com/mdm/entry01">MIKHAIL.PANOV</USRID>
+            <SEX xmlns="http://www.ibm.com/mdm/entry01">мужской</SEX>
+            <EMAIL xmlns="http://www.ibm.com/mdm/entry01">MIKHAIL.PANOV@X5.RU</EMAIL>
+            <MOBILE_PHONE xmlns="http://www.ibm.com/mdm/entry01">+79033919112</MOBILE_PHONE>
+        </CLS_PERNR>
+    </Item>
+</ns0:mt_mdm_ecp_cluster>
