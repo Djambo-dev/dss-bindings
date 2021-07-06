@@ -5,6 +5,7 @@
 -- Delete old bindings for next personal number: 1661476, 1652849, 1661372, 1639616
 delete from bindings.employee where personal_login in ('1661476', '1652849', '1661372', '1639616');
 
+-- Add new bindings:
 -- HD05
 insert into bindings.employee(cfo_id, personal_number, position_id, position_name, personal_login, modified_date) values ('E1045595','1661476', 56000002,'Территориальный менеджер', 'RUSLAN.FOROSTOVSKY', now());
 -- HD06
