@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns0:mt_mdm_ecp_cluster xmlns:ns0="http://x5.ru/mdm">
+    <messageHeader>
+        <reqId>501393</reqId>
+        <targetSystem>MSA_ECP</targetSystem>
+        <serviceInterface>CLUSTER</serviceInterface>
+        <interfaceNamespace/></messageHeader>
+    <Item xmlns="http://www.ibm.com/mdm/entry01">
+        <MDM_ID xmlns="">9992</MDM_ID>
+        <NAME xmlns="">Логистика формата Дискаунтер Московского региона</NAME>
+        <NETWORK_ID xmlns="">D</NETWORK_ID>
+        <CLS_PERNR xmlns=""/>
+    </Item>
+</ns0:mt_mdm_ecp_cluster>

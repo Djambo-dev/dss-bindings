@@ -1,6 +1,5 @@
 package ru.digital.league.x5.sign.bindings.xml.model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlAccessType;

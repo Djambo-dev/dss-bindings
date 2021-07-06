@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns0:mt_mdm_ecp_cfo xmlns:ns0="http://x5.ru/mdm">
+    <messageHeader>
+        <reqId>518131</reqId>
+        <targetSystem>MSA_ECP</targetSystem>
+        <serviceInterface>CFO</serviceInterface>
+        <interfaceNamespace/>
+    </messageHeader>
+    <Item xmlns="http://www.ibm.com/mdm/entry01">
+        <MDM_ID xmlns="">EX046976</MDM_ID>
+        <FORMAT_NAME xmlns="">F</FORMAT_NAME>
+        <SHOP_PERNR xmlns="" occ="851690928">
+            <PERNR xmlns="http://www.ibm.com/mdm/entry01"><MDM_ID>555452</MDM_ID></PERNR>
+            <STELL_ID xmlns="http://www.ibm.com/mdm/entry01">52036727</STELL_ID>
+            <STELL_TXT xmlns="http://www.ibm.com/mdm/entry01">Супервайзер ТС5</STELL_TXT>
+            <HPERN xmlns="http://www.ibm.com/mdm/entry01"/>
+            <USRID xmlns="http://www.ibm.com/mdm/entry01">NATALIA.BIRICHOVA</USRID>
+        </SHOP_PERNR>
+    </Item>
+</ns0:mt_mdm_ecp_cfo>

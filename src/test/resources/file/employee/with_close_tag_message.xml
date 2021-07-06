@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns0:mt_mdm_ecp_cfo xmlns:ns0="http://x5.ru/mdm">
+    <messageHeader>
+        <reqId>518131</reqId>
+        <targetSystem>MSA_ECP</targetSystem>
+        <serviceInterface>CFO</serviceInterface>
+        <interfaceNamespace/>
+    </messageHeader>
+    <Item xmlns="http://www.ibm.com/mdm/entry01">
+        <MDM_ID xmlns="">EX046976</MDM_ID>
+        <FORMAT_NAME xmlns="">F</FORMAT_NAME>
+        <SHOP_PERNR xmlns=""/>
+    </Item>
+</ns0:mt_mdm_ecp_cfo>
