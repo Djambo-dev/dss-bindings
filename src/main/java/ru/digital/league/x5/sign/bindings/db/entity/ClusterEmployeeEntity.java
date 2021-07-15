@@ -82,4 +82,10 @@ public class ClusterEmployeeEntity extends BindingEntity {
     @Column(name = "pt_personal_number")
     private String partTimePersonalNumber;
 
+    /**
+     *  Маркер, обозначающий неактуальную привязку
+     * */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
 }

@@ -1,8 +1,6 @@
 package ru.digital.league.x5.sign.bindings.data;
 
 import ru.digital.league.x5.sign.bindings.db.entity.EmployeeEntity;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeDto;
-import ru.digital.league.x5.sign.bindings.dto.EmployeeListDto;
 import ru.digital.league.x5.sign.bindings.xml.model.Employee;
 import ru.digital.league.x5.sign.bindings.xml.model.EmployeeBinding;
 import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
@@ -55,17 +53,17 @@ public class EmployeeData {
     public static EmployeeBinding emptyEmployeeBindingWithNull(){
         EmployeeBinding employeeBinding = new EmployeeBinding();
         employeeBinding.setCfoId("E4221112");
-        employeeBinding.setEmployeeBindings(List.of(emptyEmployee3()));
+        employeeBinding.setEmployeeBindings(null);
         return employeeBinding;
     }
 
     public static Employee employee1(){
         Employee employee = new Employee();
-        employee.setPersonalNumber("098123");
+        employee.setPersonalNumber("961135");
         employee.setPersonalLogin("EKATERINA.PARUBOK");
         employee.setPositionId(50000566L);
         employee.setPositionName("Директор");
-        employee.setLinkedPersonalNumber("961135");
+        employee.setLinkedPersonalNumber("098123");
         return employee;
     }
 
@@ -77,6 +75,7 @@ public class EmployeeData {
         ee.setPositionId(50000566L);
         ee.setPositionName("Директор");
         ee.setPartTimePersonalNumber("961135");
+        ee.setIsDeleted(false);
         return ee;
     }
 
@@ -92,6 +91,7 @@ public class EmployeeData {
         ee.setPositionId(50000566L);
         ee.setPositionName("Директор");
         ee.setPartTimePersonalNumber("098123");
+        ee.setIsDeleted(false);
         return ee;
     }
 
@@ -113,6 +113,7 @@ public class EmployeeData {
         ee.setPositionId(50000500L);
         ee.setPositionName("Супервайзер");
         ee.setPartTimePersonalNumber(null);
+        ee.setIsDeleted(false);
         return ee;
     }
 

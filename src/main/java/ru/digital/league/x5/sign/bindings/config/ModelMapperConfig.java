@@ -25,6 +25,7 @@ import ru.digital.league.x5.sign.bindings.xml.model.Store;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("Convert2Lambda") // если преобразовать, то перестанут корректно работать тесты
 @Configuration
@@ -59,18 +60,21 @@ public class ModelMapperConfig {
                     List<EmployeeDto> employeeBindingList;
                     if (!CollectionUtils.isEmpty(source.getEmployeeBindings())) {
                         employeeBindingList = source.getEmployeeBindings().stream()
-                                .flatMap(item ->
-                                        item.getEmployeeBindings().stream()
-                                                .filter(Objects::nonNull)
-                                                .map(binding -> EmployeeDto.builder()
-                                                        .cfoId(item.getCfoId())
-                                                        .personalLogin(binding.getPersonalLogin())
-                                                        .personalNumber(binding.getPersonalNumber())
-                                                        .positionId(binding.getPositionId())
-                                                        .positionName(binding.getPositionName())
-                                                        .linkedPersonalNumber(binding.getLinkedPersonalNumber())
-                                                        .build()
-                                                )
+                                .flatMap(item -> {
+                                            if (item.getEmployeeBindings() == null) {
+                                                return Stream.of(EmployeeDto.builder()
+                                                        .cfoId(item.getCfoId()).build());
+                                            } else return item.getEmployeeBindings().stream()
+                                                    .filter(Objects::nonNull)
+                                                    .map(binding -> EmployeeDto.builder()
+                                                            .cfoId(item.getCfoId())
+                                                            .personalLogin(binding.getPersonalLogin())
+                                                            .personalNumber(binding.getPersonalNumber())
+                                                            .positionId(binding.getPositionId())
+                                                            .positionName(binding.getPositionName())
+                                                            .linkedPersonalNumber(binding.getLinkedPersonalNumber())
+                                                            .build());
+                                        }
                                 )
                                 .collect(Collectors.toList());
                         return EmployeeListDto.builder()
@@ -101,6 +105,7 @@ public class ModelMapperConfig {
                 String personalNumber = (isNotExistsLinkedPn) ? source.getPersonalNumber() : linkedPn;
                 employeeEntity.setPersonalNumber(personalNumber);
                 employeeEntity.setPartTimePersonalNumber((isNotExistsLinkedPn) ? null : source.getPersonalNumber());
+                employeeEntity.setIsDeleted(false);
                 return employeeEntity;
             }
         };
@@ -115,20 +120,26 @@ public class ModelMapperConfig {
                 List<ClusterEmployeeDto> employeeBindingList = null;
                 if (!CollectionUtils.isEmpty(source.getClusterEmployeeBindingList())) {
                     employeeBindingList = source.getClusterEmployeeBindingList().stream()
-                            .filter(item -> item.getClusterEmployeeList() != null)
-                            .flatMap(item -> item.getClusterEmployeeList().stream()
-                                    .map(binding -> ClusterEmployeeDto.builder()
-                                            .clusterId(item.getClusterId())
-                                            .personalLogin(binding.getPersonalLogin())
-                                            .personalNumber(binding.getPersonalNumber())
-                                            .positionId(binding.getPositionId())
-                                            .positionName(binding.getPositionName())
-                                            .fullName(binding.getFullName())
-                                            .role(binding.getRole())
-                                            .email(binding.getEmail())
-                                            .linkedPersonalNumber(binding.getLinkedPersonalNumber())
-                                            .build()
-                                    )
+                            .flatMap(item -> {
+                                        if (item.getClusterEmployeeList() == null) {
+                                            return Stream.of(ClusterEmployeeDto.builder()
+                                                    .clusterId(item.getClusterId()).build());
+                                        } else {
+                                            return item.getClusterEmployeeList().stream()
+                                                    .map(binding -> ClusterEmployeeDto.builder()
+                                                            .clusterId(item.getClusterId())
+                                                            .personalLogin(binding.getPersonalLogin())
+                                                            .personalNumber(binding.getPersonalNumber())
+                                                            .positionId(binding.getPositionId())
+                                                            .positionName(binding.getPositionName())
+                                                            .fullName(binding.getFullName())
+                                                            .role(binding.getRole())
+                                                            .email(binding.getEmail())
+                                                            .linkedPersonalNumber(binding.getLinkedPersonalNumber())
+                                                            .build()
+                                                    );
+                                        }
+                                    }
                             )
                             .collect(Collectors.toList());
                 }
@@ -158,6 +169,7 @@ public class ModelMapperConfig {
                 clusterEmployeeEntity.setFullName(source.getFullName());
                 clusterEmployeeEntity.setRole(source.getRole());
                 clusterEmployeeEntity.setEmail(source.getEmail());
+                clusterEmployeeEntity.setIsDeleted(false);
                 return clusterEmployeeEntity;
             }
         };

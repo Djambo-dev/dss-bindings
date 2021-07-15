@@ -1,6 +1,5 @@
 package ru.digital.league.x5.sign.bindings.service;
 
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +14,9 @@ import ru.digital.league.x5.sign.bindings.xml.model.EmployeeList;
 
 import java.util.List;
 
-import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1RevertPartTimePN;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeList;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull_and_withoutNull;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.emptyEmployeeList;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
@@ -55,7 +47,7 @@ public class EmployeeServiceImplTest {
 
     /**
      *  Проверяем сохранение сущностей EmployeeEntity (case: обычный случай)
-     *  Результат: корректная обработка входящих данных
+     *  Результат: корректная обработка входящих данных, пометки на удаление нет
      * */
 
     @Test
@@ -64,7 +56,8 @@ public class EmployeeServiceImplTest {
         employeeService.save(employeeList);
         // проверка
         verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
-        verify(employeeRepository, times(1)).saveAll(anyList());
+        verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
+        verify(employeeRepository, times(0)).markAsDeletedByCfoId(null);
     }
 
     /**
@@ -78,8 +71,9 @@ public class EmployeeServiceImplTest {
         // вызов
         employeeService.save(emptyEmployeeList);
         // проверка
-        verify(employeeRepository, times(0)).deleteAllByCfoIdIn(anyList());
-        verify(employeeRepository, times(0)).saveAll(anyList());
+        verify(employeeRepository, times(0)).deleteAllByCfoIdIn(null);
+        verify(employeeRepository, times(0)).saveAll(null);
+        verify(employeeRepository, times(0)).markAsDeletedByCfoId(null);
     }
 
     /**
@@ -89,13 +83,14 @@ public class EmployeeServiceImplTest {
 
     @Test
     public void save_listWithNull() {
-        // подготовка
-        when(employeeRepository.saveAll(employeeEntityList1())).thenReturn(employeeEntityList1());
+        //подготовка
+        List<String> cfoIds = List.of(employeeListWithNull.getEmployeeBindings().get(0).getCfoId());
         // вызов
         employeeService.save(employeeListWithNull);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(Lists.emptyList());
-        verify(employeeRepository, times(1)).saveAll(Lists.emptyList());
+        verify(employeeRepository, times(0)).deleteAllByCfoIdIn(null);
+        verify(employeeRepository, times(0)).saveAll(null);
+        verify(employeeRepository, times(1)).markAsDeletedByCfoId(cfoIds);
     }
 
 
@@ -106,12 +101,14 @@ public class EmployeeServiceImplTest {
 
     @Test
     public void save_listWithNull_and_withoutNull() {
-        // подготовка
-        when(employeeRepository.saveAll(employeeEntityList1RevertPartTimePN())).thenReturn(employeeEntityList1RevertPartTimePN());
+        //подготовка
+        List<String> cfoIdsToDelete = List.of(employeeListWithNull.getEmployeeBindings().get(0).getCfoId());
+        List<String> cfoIdsToUpdate = List.of(employeeList.getEmployeeBindings().get(0).getCfoId());
         // вызов
         employeeService.save(employeeListWithNull_and_withoutNull);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
-        verify(employeeRepository, times(1)).saveAll(employeeEntityList1RevertPartTimePN());
+        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(cfoIdsToUpdate);
+        verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
+        verify(employeeRepository, times(1)).markAsDeletedByCfoId(cfoIdsToDelete);
     }
 }
