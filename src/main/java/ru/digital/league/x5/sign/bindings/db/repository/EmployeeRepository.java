@@ -15,7 +15,7 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
     @Modifying
     @Query(value =
             "UPDATE bindings.employee " +
-            "SET is_deleted = TRUE " +
+            "SET is_deleted = true " +
             "WHERE cfo_id in ( :cfoIds )",
             nativeQuery = true)
     void markAsDeletedByCfoId(@Param(value = "cfoIds") List<String> cfoIds);
