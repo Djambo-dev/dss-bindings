@@ -16,7 +16,11 @@ import java.util.List;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.*;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeList;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull_and_withoutNull;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.emptyEmployeeList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
