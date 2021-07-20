@@ -15,7 +15,7 @@ public interface ClusterEmployeeRepository extends JpaRepository<ClusterEmployee
     @Modifying
     @Query(value =
             "UPDATE bindings.cluster_employee " +
-            "SET is_deleted = true " +
+            "SET is_deleted = true, modified_date = now() " +
             "WHERE cluster_id in ( :clusterIds )",
             nativeQuery = true)
     void markAsDeletedByCfoId(@Param(value = "clusterIds") List<String> clusterIds);

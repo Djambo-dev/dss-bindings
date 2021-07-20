@@ -59,7 +59,7 @@ public class EmployeeServiceImplTest {
         // вызов
         employeeService.save(employeeList);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
+//        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(List.of("E2221111"));
         verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
         verify(employeeRepository, times(0)).markAsDeletedByCfoId(null);
     }
@@ -106,13 +106,14 @@ public class EmployeeServiceImplTest {
     @Test
     public void save_listWithNull_and_withoutNull() {
         //подготовка
-        List<String> cfoIdsToDelete = List.of(employeeListWithNull.getEmployeeBindings().get(0).getCfoId());
-        List<String> cfoIdsToUpdate = List.of(employeeList.getEmployeeBindings().get(0).getCfoId());
+        List<String> cfoIdsMarkUsDeleted = List.of(
+                employeeListWithNull_and_withoutNull.getEmployeeBindings().get(0).getCfoId(),
+                employeeListWithNull_and_withoutNull.getEmployeeBindings().get(1).getCfoId());
         // вызов
         employeeService.save(employeeListWithNull_and_withoutNull);
         // проверка
-        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(cfoIdsToUpdate);
+//        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(cfoIdsToUpdate);
         verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
-        verify(employeeRepository, times(1)).markAsDeletedByCfoId(cfoIdsToDelete);
+        verify(employeeRepository, times(1)).markAsDeletedByCfoId(cfoIdsMarkUsDeleted);
     }
 }

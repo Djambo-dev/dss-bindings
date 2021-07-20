@@ -12,8 +12,6 @@ import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
 import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -22,16 +20,18 @@ import java.util.stream.Collectors;
  * Что такое "пустые" записи?
  * Данные о сотрудниках к нам приходят из IBM MDM. Т.к. поиск привязанных к сотруднику магазинов происходит по его ТН,
  * то наличие ТН в записи о сотруднике обязательно, однако часть таких записей приходит с пустым полями (заполнен только
- * cfo id). Такие записи я называю "пустыми" и до сохранения в БД они не доходят. На момент написания этого комментария
+ * MDM_ID - cluster id). Такие записи я называю "пустыми" и до сохранения в БД они не доходят. На момент написания этого комментария
  * таких записей было примерно 30% от общего количества.
+ * <p>
+ * Вышеописанное должно восприниматься системой, как записи, которые не имеют привязок. Допустим, есть привязка сотрудника
+ * к cluster_id XXXX. Если придет запись cluster_id XXXX с пустым перечнем привязок сотрудника, то такую запись решено помечать,
+ * как "is_deleted" (но не удалять), что позволит оставить функционал по отображению и подписанию закрытых магазинов нетронутым.
  */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
-
-    private final static String UPDATED_CLUSTER_IDS = "updatedClusterIds";
-    private final static String EMPTY_CLUSTER_IDS = "emptyClusterIds";
 
     private final ClusterEmployeeRepository clusterEmployeeRepository;
     private final ModelMapper modelMapper;
@@ -48,17 +48,13 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                     employeeDto.getPersonalNumber() != null && !employeeDto.getPersonalNumber().isEmpty();
 
             List<ClusterEmployeeEntity> clusterEmployeeEntityList = getClusterEmployeeEntities(clusterEmployeeListDto, notNullContent);
+            List<String> clusterIds = getClusterIds(clusterEmployeeListDto, notNullContent);
 
-            HashMap <String, List<String>> clusterIds = getClusterIds(clusterEmployeeListDto, notNullContent);
-
-            if(clusterIds.get(EMPTY_CLUSTER_IDS).size() > 0) {
-                log.info("Mark as \"is_deleted\" cluster employee ...: {} ", clusterIds.get(EMPTY_CLUSTER_IDS));
-                clusterEmployeeRepository.markAsDeletedByCfoId(clusterIds.get(EMPTY_CLUSTER_IDS));
+            if (clusterIds.size() > 0) { // пропускаем если список сотрудников кластера пустой
+                log.info("Mark as \"is_deleted\" cluster employee ...: {} ", clusterIds);
+                clusterEmployeeRepository.markAsDeletedByCfoId(clusterIds);
             }
-
-            if (clusterEmployeeEntityList.size() > 0) { // пропускаем если список сотрудников кластера пустой
-                clusterEmployeeRepository.deleteAllByClusterIdIn(clusterIds.get(UPDATED_CLUSTER_IDS));
-                log.info("Deleted existing cluster employee ...: {}", clusterIds.get(UPDATED_CLUSTER_IDS));
+            if (clusterEmployeeEntityList.size() > 0) {
                 clusterEmployeeEntityList = clusterEmployeeRepository.saveAll(clusterEmployeeEntityList);
             }
             log.info("Saved cluster employee {} to DB", clusterEmployeeEntityList);
@@ -73,26 +69,11 @@ public class ClusterEmployeeServiceImpl implements ClusterEmployeeService {
                 .collect(Collectors.toList());
     }
 
-    private HashMap<String, List<String>> getClusterIds(ClusterEmployeeListDto clusterEmployeeListDto,
-                                                        Predicate<ClusterEmployeeDto> notNullContent) {
-        List<String> updatedClusterIds = new ArrayList<>();
-        List<String> emptyClusterIds   = new ArrayList<>();
-        HashMap<String, List<String>> cfoIds = new HashMap<>();
-
-        clusterEmployeeListDto.getClusterEmployeeBindingList().stream()
-                .filter(clusterEmployeeDto -> {
-                    if (notNullContent.test(clusterEmployeeDto)) {
-                        return true;
-                    }else{
-                        emptyClusterIds.add(clusterEmployeeDto.getClusterId());
-                        return false;
-                    }
-                })
+    private List<String> getClusterIds(ClusterEmployeeListDto clusterEmployeeListDto,
+                                       Predicate<ClusterEmployeeDto> notNullContent) {
+        return clusterEmployeeListDto.getClusterEmployeeBindingList().stream()
                 .map(ClusterEmployeeDto::getClusterId)
                 .distinct()
-                .forEach(cfoId -> updatedClusterIds.add(cfoId));
-        cfoIds.put(UPDATED_CLUSTER_IDS, updatedClusterIds);
-        cfoIds.put(EMPTY_CLUSTER_IDS, emptyClusterIds);
-        return cfoIds;
+                .collect(Collectors.toList());
     }
 }
