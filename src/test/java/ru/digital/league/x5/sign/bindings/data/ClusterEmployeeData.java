@@ -1,15 +1,10 @@
 package ru.digital.league.x5.sign.bindings.data;
 
-import org.assertj.core.util.Lists;
 import ru.digital.league.x5.sign.bindings.db.entity.ClusterEmployeeEntity;
-import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeDto;
-import ru.digital.league.x5.sign.bindings.dto.ClusterEmployeeListDto;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployee;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeBinding;
 import ru.digital.league.x5.sign.bindings.xml.model.ClusterEmployeeList;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ClusterEmployeeData {
@@ -47,7 +42,7 @@ public class ClusterEmployeeData {
 
     public static ClusterEmployeeBinding clusterEmployeeBindingWithInvalidValue() {
         ClusterEmployeeBinding clusterEmployeeBinding = new ClusterEmployeeBinding();
-        clusterEmployeeBinding.setClusterId("0000");
+        clusterEmployeeBinding.setClusterId("0001");
         clusterEmployeeBinding.setClusterEmployeeList(List.of(clusterEmployee1PersonalNumberNull()));
         return clusterEmployeeBinding;
     }
@@ -55,7 +50,7 @@ public class ClusterEmployeeData {
     public static ClusterEmployeeBinding emptyClusterEmployeeBinding() {
         ClusterEmployeeBinding clusterEmployeeBinding = new ClusterEmployeeBinding();
         clusterEmployeeBinding.setClusterId("0000");
-        clusterEmployeeBinding.setClusterEmployeeList(Lists.emptyList());
+        clusterEmployeeBinding.setClusterEmployeeList(null);
         return clusterEmployeeBinding;
     }
 
@@ -90,6 +85,7 @@ public class ClusterEmployeeData {
         cee.setPositionId(50000566L);
         cee.setPositionName("Начальник отдела операций");
         cee.setPartTimePersonalNumber("961135");
+        cee.setIsDeleted(false);
         return cee;
     }
 
