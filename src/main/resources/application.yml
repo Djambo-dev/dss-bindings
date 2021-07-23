@@ -15,6 +15,7 @@ spring:
     user: ${PG_USER}
     password: ${PG_PASSWORD}
     url: "jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DATABASE}"
+    liquibase-schema: ${LIQUIBASE_SCHEMA}
   jpa:
     properties:
       hibernate:
