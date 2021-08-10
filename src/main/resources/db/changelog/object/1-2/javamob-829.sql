@@ -10,7 +10,8 @@ delete from bindings.employee where personal_number in ('1661476', '1652849', '1
                                                         '1663608', -- HD01
                                                         '1770770', --HD13
                                                         '1754784', --HD08
-                                                        '1678992' -- HD03
+                                                        '1678992', -- HD03
+                                                        '1760149' -- HD09
                                                        );
 
 -- Add new bindings:
