@@ -24,6 +24,8 @@ jar.archiveName = 'dss-bindings'
 sourceCompatibility = 11.0
 targetCompatibility = 11.0
 
+ext['log4j2.version'] = '2.16.0'
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
