@@ -16,11 +16,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeEntityList1;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeList;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.employeeListWithNull_and_withoutNull;
-import static ru.digital.league.x5.sign.bindings.data.EmployeeData.emptyEmployeeList;
+import static ru.digital.league.x5.sign.bindings.data.EmployeeData.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ModelMapperConfig.class})
@@ -33,20 +29,23 @@ public class EmployeeServiceImplTest {
     private ModelMapper modelMapper;
 
     private EmployeeService employeeService;
+    private List<Long> excludedPositionIds = List.of(50000999L);
 
     private EmployeeList employeeList;
     private EmployeeList emptyEmployeeList;
     private EmployeeList employeeListWithNull;
     private EmployeeList employeeListWithNull_and_withoutNull;
+    private EmployeeList employeeListWithExcludedPositionId;
 
     @Before
     public void setUp() {
-        employeeService = new EmployeeServiceImpl(employeeRepository, modelMapper);
+        employeeService = new EmployeeServiceImpl(excludedPositionIds, employeeRepository, modelMapper);
 
         employeeList = employeeList();
         emptyEmployeeList = emptyEmployeeList();
         employeeListWithNull = employeeListWithNull();
         employeeListWithNull_and_withoutNull = employeeListWithNull_and_withoutNull();
+        employeeListWithExcludedPositionId = employeeListWithExcludedPositionId();
     }
 
     /**
@@ -115,5 +114,16 @@ public class EmployeeServiceImplTest {
 //        verify(employeeRepository, times(1)).deleteAllByCfoIdIn(cfoIdsToUpdate);
         verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
         verify(employeeRepository, times(1)).markAsDeletedByCfoId(cfoIdsMarkUsDeleted);
+    }
+
+    /**
+     *  Проверяем сохранение сущностей EmployeeEntity (case: фильтрация сущностей по исключающим значениям position_id)
+     *  Результат : сохранение 2 из 3-х сущностей
+     * */
+
+    @Test
+    public void filteredListByExcludedPositionId(){
+        employeeService.save(employeeListWithExcludedPositionId);
+        verify(employeeRepository, times(1)).saveAll(employeeEntityList1());
     }
 }
