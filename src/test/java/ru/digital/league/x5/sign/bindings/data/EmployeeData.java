@@ -11,53 +11,67 @@ import java.util.List;
 
 public class EmployeeData {
 
-    public static EmployeeList employeeList(){
+    public static EmployeeList employeeList() {
         EmployeeList employeeList = new EmployeeList();
         employeeList.setEmployeeBindings(Arrays.asList(employeeBinding()));
         return employeeList;
     }
 
-    public static EmployeeList emptyEmployeeList(){
+    public static EmployeeList emptyEmployeeList() {
         EmployeeList employeeList = new EmployeeList();
         employeeList.setEmployeeBindings(Arrays.asList(emptyEmployeeBinding()));
         return employeeList;
     }
 
-    public static EmployeeList employeeListWithNull(){
+    public static EmployeeList employeeListWithNull() {
         EmployeeList employeeList = new EmployeeList();
         employeeList.setEmployeeBindings(Arrays.asList(emptyEmployeeBindingWithNull()));
         return employeeList;
     }
 
-    public static EmployeeList employeeListWithNull_and_withoutNull(){
+    public static EmployeeList employeeListWithNull_and_withoutNull() {
         EmployeeList employeeList = new EmployeeList();
-        employeeList.setEmployeeBindings(Arrays.asList(employeeBinding(),emptyEmployeeBindingWithNull()));
+        employeeList.setEmployeeBindings(Arrays.asList(employeeBinding(), emptyEmployeeBindingWithNull()));
         return employeeList;
     }
 
-    public static EmployeeBinding employeeBinding(){
-       EmployeeBinding employeeBinding = new EmployeeBinding();
-       employeeBinding.setCfoId("E2221111");
-       employeeBinding.setEmployeeBindings(Arrays.asList(employee1(),employee2()));
-       return employeeBinding;
+    public static EmployeeList employeeListWithExcludedPositionId() {
+        EmployeeList employeeList = new EmployeeList();
+        employeeList.setEmployeeBindings(Arrays.asList(employeeBindingWithExcludedPosition()));
+        return employeeList;
+    }
+
+    public static EmployeeBinding employeeBinding() {
+        EmployeeBinding employeeBinding = new EmployeeBinding();
+        employeeBinding.setCfoId("E2221111");
+        employeeBinding.setEmployeeBindings(Arrays.asList(employee1(), employee2()));
+        return employeeBinding;
 
     }
 
-    public static EmployeeBinding emptyEmployeeBinding(){
+    public static EmployeeBinding emptyEmployeeBinding() {
         EmployeeBinding employeeBinding = new EmployeeBinding();
         employeeBinding.setCfoId("E3221112");
         employeeBinding.setEmployeeBindings(Collections.EMPTY_LIST);
         return employeeBinding;
     }
 
-    public static EmployeeBinding emptyEmployeeBindingWithNull(){
+    public static EmployeeBinding emptyEmployeeBindingWithNull() {
         EmployeeBinding employeeBinding = new EmployeeBinding();
         employeeBinding.setCfoId("E4221112");
         employeeBinding.setEmployeeBindings(null);
         return employeeBinding;
     }
 
-    public static Employee employee1(){
+    public static EmployeeBinding employeeBindingWithExcludedPosition() {
+        EmployeeBinding employeeBinding = new EmployeeBinding();
+        employeeBinding.setCfoId("E2221111");
+        employeeBinding.setEmployeeBindings(Arrays.asList(employee1(), employee2(), employee3()));
+        return employeeBinding;
+    }
+
+
+    public static Employee employee1() {
         Employee employee = new Employee();
         employee.setPersonalNumber("961135");
         employee.setPersonalLogin("EKATERINA.PARUBOK");
@@ -81,7 +95,7 @@ public class EmployeeData {
 
     /**
      * Создает EmployeeEntity, который учитывает значение поля partTimePersonalNumber
-     * */
+     */
 
     private static EmployeeEntity employeeEntity1RevertPartTimePN() {
         EmployeeEntity ee = new EmployeeEntity();
@@ -117,21 +131,17 @@ public class EmployeeData {
         return ee;
     }
 
+    private static Employee employee3() {
+        Employee employee = new Employee();
+        employee.setPersonalNumber("098120");
+        employee.setPersonalLogin("SIRKA.BURKA");
+        employee.setPositionId(50000999L);
+        employee.setPositionName("Супервайзер");
+        employee.setLinkedPersonalNumber(null);
+        return employee;
+    }
+
     public static List<EmployeeEntity> employeeEntityList1() {
         return List.of(employeeEntity1(), employeeEntity2());
-    }
-
-    public static List<EmployeeEntity> employeeEntityList1RevertPartTimePN() {
-        return List.of(employeeEntity1RevertPartTimePN(), employeeEntity2());
-    }
-
-    /**
-     * Специальный bean в котором все поля кроме cfoId равны нулю
-     * Такие объекты присылает MDM, записывать их в БД не имеет смысла
-     */
-
-    private static Employee emptyEmployee3() {
-        Employee employee = new Employee();
-        return employee;
     }
 }

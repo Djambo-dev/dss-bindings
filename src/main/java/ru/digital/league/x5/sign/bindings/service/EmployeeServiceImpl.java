@@ -3,6 +3,7 @@ package ru.digital.league.x5.sign.bindings.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +33,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
+    @Value("${user.excluded.position-id}")
+    private final List<Long> excludedPositionId;
+
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
@@ -41,33 +45,45 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeListDto employeeListDto = modelMapper.map(employeeList, EmployeeListDto.class);
 
         if (employeeListDto != null && !CollectionUtils.isEmpty(employeeListDto.getEmployeeBindingList())) {
+
             log.info("Saving employee bindings...: {}", employeeListDto);
 
-            Predicate<EmployeeDto> notNullContent = employeeDto ->
-                    employeeDto.getPersonalNumber() != null && !employeeDto.getPersonalNumber().isEmpty();
-
-            List<EmployeeEntity> employeeEntityList = getEmployeeEntities(employeeListDto, notNullContent);
-            List<String> cfoIds = getCfoIds(employeeListDto, notNullContent);
+            List<EmployeeEntity> employeeEntityList = getEmployeeEntities(employeeListDto);
+            List<String> cfoIds = getCfoIds(employeeListDto);
 
             if (cfoIds.size() > 0) {
                 log.info("Mark as 'is_deleted' employee with CFO_ID: {}", cfoIds);
                 employeeRepository.markAsDeletedByCfoId(cfoIds);
             }
             if (employeeEntityList.size() > 0) {
-                employeeEntityList = employeeRepository.saveAll(employeeEntityList);
+                employeeEntityList = employeeRepository.saveAll(filteredByExcludedPersonalId(employeeEntityList));
             }
             log.info("Saved employee {} to DB", employeeEntityList);
         }
     }
 
-    private List<EmployeeEntity> getEmployeeEntities(EmployeeListDto employeeListDto, Predicate<EmployeeDto> notNullContent) {
+    private List<EmployeeEntity> filteredByExcludedPersonalId(List<EmployeeEntity> employeeEntities) {
+        List<EmployeeEntity> filteredList;
+        if (!CollectionUtils.isEmpty(excludedPositionId)) {
+            filteredList = employeeEntities.stream()
+                    .filter(entity -> !excludedPositionId.contains(entity.getPositionId()))
+                    .collect(Collectors.toList());
+        } else {
+            filteredList = employeeEntities;
+        }
+        return filteredList;
+    }
+
+    private List<EmployeeEntity> getEmployeeEntities(EmployeeListDto employeeListDto) {
+        Predicate<EmployeeDto> notNullContent = employeeDto -> employeeDto.getPersonalNumber() != null
+                && !employeeDto.getPersonalNumber().isEmpty();
         return employeeListDto.getEmployeeBindingList().stream()
                 .filter(notNullContent)
                 .map(employeeDto -> modelMapper.map(employeeDto, EmployeeEntity.class))
                 .collect(Collectors.toList());
     }
 
-    private List<String> getCfoIds(EmployeeListDto employeeListDto, Predicate<EmployeeDto> notNullContent) {
+    private List<String> getCfoIds(EmployeeListDto employeeListDto) {
         return employeeListDto.getEmployeeBindingList().stream()
                 .map(EmployeeDto::getCfoId)
                 .distinct()
