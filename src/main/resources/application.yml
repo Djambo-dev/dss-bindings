@@ -39,7 +39,7 @@ security:
 user:
   position-id: ${EMPOWERED_POSITION_ID}
   excluded:
-    position-id: ${EXCLUDED_POSITION_ID:50000583,50000535}
+    position-id: ${EXCLUDED_POSITION_ID:50000583,50000535,53816571,51346718}
 
 interval:
   days: ${INTERVAL_DAYS_FOR_CLOSED_SHOP}
